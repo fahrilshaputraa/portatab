@@ -9,6 +9,7 @@ from apps.catalog.models import BranchProduct
 from apps.inventory.forms import StockAdjustForm
 from apps.inventory.services import InsufficientStock, adjust_stock
 from apps.tenants.permissions import require_permission, require_tenant
+from apps.tenants.services import low_stock_threshold
 
 
 @login_required
@@ -22,7 +23,11 @@ def inventory_list(request):
         if request.branch
         else BranchProduct.objects.none()
     )
-    return render(request, "inventory/list.html", {"products": products})
+    return render(
+        request,
+        "inventory/list.html",
+        {"products": products, "low_stock_threshold": low_stock_threshold(request.tenant)},
+    )
 
 
 @login_required

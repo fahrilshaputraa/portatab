@@ -1,0 +1,98 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Pengaturan Bisnis — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Pengaturan Bisnis</h1>
+  <p class="mt-4 text-body text-slate-gray">Profil bisnis, cabang, dan kebijakan operasional.</p>
+
+  <div class="mt-32 grid grid-cols-1 gap-24 lg:grid-cols-2">
+    {# ------------------------------------------------------------ Profil --- #}
+    <section class="rounded-2xl border border-hairline bg-pure-white p-24">
+      <h2 class="text-heading-sm font-semibold text-ink-charcoal">Profil bisnis</h2>
+      <form method="post" class="mt-16 flex flex-col gap-16">
+        {% csrf_token %}
+        <input type="hidden" name="section" value="profile">
+        {% include "partials/_form_errors.html" with form=profile_form %}
+        {% for field in profile_form %}
+          {% include "components/_field.html" with field=field %}
+        {% endfor %}
+        <div class="mt-8">
+          <button type="submit" class="btn btn-primary">Simpan profil</button>
+        </div>
+      </form>
+    </section>
+
+    {# --------------------------------------------------------- Kebijakan --- #}
+    <section class="rounded-2xl border border-hairline bg-pure-white p-24">
+      <h2 class="text-heading-sm font-semibold text-ink-charcoal">Kebijakan operasional</h2>
+      <form method="post" class="mt-16 flex flex-col gap-16">
+        {% csrf_token %}
+        <input type="hidden" name="section" value="policy">
+        {% include "partials/_form_errors.html" with form=policy_form %}
+        {% for field in policy_form %}
+          {% include "components/_field.html" with field=field %}
+        {% endfor %}
+        <div class="mt-8">
+          <button type="submit" class="btn btn-primary">Simpan kebijakan</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  {# ------------------------------------------------------------- Cabang --- #}
+  <section class="mt-32">
+    <div class="flex flex-wrap items-center justify-between gap-16">
+      <h2 class="text-heading-sm font-semibold text-ink-charcoal">Cabang</h2>
+      <a href="{% url 'tenants:branch_create' %}" class="btn btn-primary">Tambah cabang</a>
+    </div>
+
+    <div class="mt-16 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Cabang</th>
+            <th class="px-16 py-12 font-medium">Kode</th>
+            <th class="px-16 py-12 font-medium">Status</th>
+            <th class="px-16 py-12 font-medium">Menerima order</th>
+            <th class="px-16 py-12 font-medium text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for branch in branches %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12 font-medium text-ink-charcoal">{{ branch.name }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ branch.code }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ branch.get_status_display }}</td>
+              <td class="px-16 py-12">
+                {% if branch.accepts_orders %}
+                  <span class="text-forest">Aktif</span>
+                {% else %}
+                  <span class="text-red-600">Dijeda</span>
+                {% endif %}
+              </td>
+              <td class="px-16 py-12">
+                <div class="flex justify-end gap-16">
+                  <form method="post" action="{% url 'tenants:branch_toggle_orders' branch.pk %}">
+                    {% csrf_token %}
+                    <button class="text-slate-gray hover:text-electric-cobalt">
+                      {% if branch.accepts_orders %}Jedakan{% else %}Aktifkan{% endif %}
+                    </button>
+                  </form>
+                  <a href="{% url 'tenants:branch_edit' branch.pk %}" class="text-electric-cobalt hover:underline">Ubah</a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="px-16 py-24 text-center text-slate-gray">Belum ada cabang.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-8 text-caption text-steel-gray">
+      Cabang yang dijeda tidak menerima checkout baru; order yang sudah masuk tetap bisa diselesaikan.
+    </p>
+  </section>
+</div>
+{% endblock %}

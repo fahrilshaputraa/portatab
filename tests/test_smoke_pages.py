@@ -9,6 +9,8 @@ from django.urls import reverse
     "url_name",
     [
         "tenants:dashboard",
+        "tenants:settings",
+        "tenants:branch_create",
         "catalog_products:list",
         "catalog_products:create",
         "catalog_categories:list",

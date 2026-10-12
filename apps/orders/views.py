@@ -15,6 +15,7 @@ from apps.orders.forms import RejectOrderForm
 from apps.orders.models import Order
 from apps.orders.selectors import cashier_queue, kitchen_queue, pending_orders
 from apps.tenants.permissions import require_permission, require_tenant
+from apps.tenants.services import cash_orders_to_kitchen
 
 
 def _render_row(request, order, *, template: str, error: str = "", status: int = 200):
@@ -105,7 +106,10 @@ def complete_order(request, pk):
 @require_permission(Perm.ORDERS_VIEW)
 def kitchen(request):
     if request.branch is not None:
-        orders = kitchen_queue(branch=request.branch)
+        orders = kitchen_queue(
+            branch=request.branch,
+            allow_cash_before_payment=cash_orders_to_kitchen(request.tenant),
+        )
     else:
         orders = Order.objects.none()
     return render(request, "orders/kitchen/index.html", {"orders": orders})
@@ -136,5 +140,12 @@ def mark_ready(request, pk):
 @require_permission(Perm.ORDERS_VIEW)
 def kitchen_board(request):
     """Compact polling endpoint that returns only orders still in the kitchen queue."""
-    orders = kitchen_queue(branch=request.branch) if request.branch else Order.objects.none()
+    orders = (
+        kitchen_queue(
+            branch=request.branch,
+            allow_cash_before_payment=cash_orders_to_kitchen(request.tenant),
+        )
+        if request.branch
+        else Order.objects.none()
+    )
     return render(request, "orders/kitchen/_board.html", {"orders": orders})

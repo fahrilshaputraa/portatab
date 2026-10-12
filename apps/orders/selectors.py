@@ -28,17 +28,17 @@ def pending_orders(*, branch) -> QuerySet[Order]:
     return branch_orders(branch=branch, statuses=[OrderStatus.PENDING]).order_by("pending_since")
 
 
-def kitchen_queue(*, branch) -> QuerySet[Order]:
-    """Orders the kitchen may work on: digital orders only once PAID, cash allowed early."""
-    return (
-        branch_orders(branch=branch, statuses=list(KITCHEN_ACTIVE_STATUSES))
-        .filter(
-            Q(payment_status=PaymentStatus.PAID)
-            | (
-                Q(payment_status__in=[PaymentStatus.UNPAID, PaymentStatus.FAILED])
-                & Q(payments__method="CASH")
-            )
+def kitchen_queue(*, branch, allow_cash_before_payment: bool) -> QuerySet[Order]:
+    """Orders the kitchen may work on.
+
+    Digital orders only qualify once PAID. Cash orders qualify before payment
+    only when ``allow_cash_before_payment`` (the tenant's policy) is on.
+    """
+    query = branch_orders(branch=branch, statuses=list(KITCHEN_ACTIVE_STATUSES))
+    if allow_cash_before_payment:
+        query = query.filter(
+            Q(payment_status=PaymentStatus.PAID) | Q(payments__method="CASH")
         )
-        .distinct()
-        .order_by("confirmed_at", "created_at")
-    )
+    else:
+        query = query.filter(payment_status=PaymentStatus.PAID)
+    return query.distinct().order_by("confirmed_at", "created_at")

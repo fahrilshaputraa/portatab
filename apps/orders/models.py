@@ -135,15 +135,20 @@ class Order(BaseModel):
     def can_enter_kitchen(self) -> bool:
         """Digital orders enter the kitchen only once payment is verified PAID.
 
-        Cash orders may enter earlier when the branch policy allows
-        (docs/BUSINESS-RULES.md §8).
+        Cash orders may enter earlier, but only when the tenant's operational
+        policy permits it (docs/BUSINESS-RULES.md §8).
         """
         if self.order_status not in KITCHEN_ACTIVE_STATUSES:
             return False
         if self.payment_status == PaymentStatus.PAID:
             return True
         if self.payment_status in {PaymentStatus.UNPAID, PaymentStatus.FAILED}:
-            return self.payment_method_is_cash
+            if not self.payment_method_is_cash:
+                return False
+            # Imported lazily to keep the model free of service imports.
+            from apps.tenants.services import cash_orders_to_kitchen
+
+            return cash_orders_to_kitchen(self.branch.tenant)
         return False
 
     @property

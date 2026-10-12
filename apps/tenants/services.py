@@ -9,7 +9,7 @@ from django.utils.text import slugify
 
 from apps.accounts.roles import RoleCode
 from apps.accounts.services import create_membership, seed_system_roles
-from apps.tenants.models import AuditLog, Branch, Tenant
+from apps.tenants.models import AuditLog, Branch, Tenant, TenantSettings
 
 
 def get_client_ip(request) -> str | None:
@@ -82,3 +82,56 @@ def create_branch(*, tenant, name: str, code: str, **fields) -> Branch:
     branch = Branch.objects.create(tenant=tenant, name=name, code=code, **fields)
     record_audit(action="branch.created", tenant=tenant, entity=branch)
     return branch
+
+
+# ---------------------------------------------------------------------------
+# Tenant operational settings
+#
+# Stored as key/value rows so a new policy needs no migration. Defaults live here
+# so every reader agrees on the behaviour when a tenant has never configured it.
+# ---------------------------------------------------------------------------
+
+SETTING_CASH_ORDERS_TO_KITCHEN = "cash_orders_to_kitchen"
+SETTING_LOW_STOCK_THRESHOLD = "low_stock_threshold"
+
+SETTING_DEFAULTS = {
+    # A cash order may reach the kitchen before payment when the shop's policy
+    # permits it (docs/BUSINESS-RULES.md §8). Default permits — the common
+    # warung flow — and owners can turn it off.
+    SETTING_CASH_ORDERS_TO_KITCHEN: True,
+    SETTING_LOW_STOCK_THRESHOLD: 5,
+}
+
+
+def get_setting(tenant, key: str):
+    """Read one tenant setting, falling back to the registered default."""
+    if tenant is None:
+        return SETTING_DEFAULTS.get(key)
+    row = TenantSettings.objects.filter(tenant=tenant, setting_key=key).first()
+    if row is None or row.setting_value is None:
+        return SETTING_DEFAULTS.get(key)
+    value = row.setting_value
+    if isinstance(value, dict) and "value" in value:
+        return value["value"]
+    return value
+
+
+def set_setting(tenant, key: str, value) -> TenantSettings:
+    """Persist one tenant setting."""
+    row, _ = TenantSettings.objects.update_or_create(
+        tenant=tenant, setting_key=key, defaults={"setting_value": {"value": value}}
+    )
+    return row
+
+
+def cash_orders_to_kitchen(tenant) -> bool:
+    """Whether a cash order may enter the kitchen before its payment is confirmed."""
+    return bool(get_setting(tenant, SETTING_CASH_ORDERS_TO_KITCHEN))
+
+
+def low_stock_threshold(tenant) -> int:
+    """Available stock at or below which a product is flagged as running low."""
+    try:
+        return int(get_setting(tenant, SETTING_LOW_STOCK_THRESHOLD))
+    except (TypeError, ValueError):
+        return int(SETTING_DEFAULTS[SETTING_LOW_STOCK_THRESHOLD])
