@@ -13,6 +13,7 @@ from django.urls import reverse
         "tenants:branch_create",
         "team:list",
         "team:invite",
+        "notifications:list",
         "catalog_products:list",
         "catalog_products:create",
         "catalog_categories:list",

@@ -1,0 +1,56 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Notifikasi — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Notifikasi</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        {% if unread_count %}{{ unread_count }} belum dibaca{% else %}Semua sudah dibaca{% endif %}
+      </p>
+    </div>
+    {% if unread_count %}
+      <form method="post" action="{% url 'notifications:mark_all_read' %}">
+        {% csrf_token %}
+        <button class="btn btn-ghost">Tandai semua dibaca</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <div class="mt-24 flex flex-col gap-12">
+    {% for notification in notifications %}
+      <article class="rounded-2xl border p-16
+                      {% if notification.read_at %}border-hairline bg-pure-white{% else %}border-electric-cobalt bg-surface-ivory{% endif %}">
+        <div class="flex flex-wrap items-start justify-between gap-8">
+          <div>
+            <p class="text-body-sm font-semibold text-ink-charcoal">{{ notification.title }}</p>
+            {% if notification.message %}
+              <p class="mt-4 text-caption text-slate-gray">{{ notification.message }}</p>
+            {% endif %}
+            <p class="mt-4 text-caption text-steel-gray">
+              {{ notification.get_event_type_display }}
+              {% if notification.branch %}· {{ notification.branch.name }}{% endif %}
+              · {{ notification.created_at|date:"j M Y H:i" }}
+            </p>
+          </div>
+          <div class="flex items-center gap-12">
+            {% if notification.order %}
+              <a href="{% url 'orders:detail' notification.order_id %}" class="text-body-sm text-electric-cobalt hover:underline">Lihat order</a>
+            {% endif %}
+            {% if not notification.read_at %}
+              <form method="post" action="{% url 'notifications:mark_read' notification.pk %}">
+                {% csrf_token %}
+                <button class="text-body-sm text-slate-gray hover:text-electric-cobalt">Tandai dibaca</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    {% empty %}
+      {% include "components/_empty_state.html" with title="Belum ada notifikasi" message="Peringatan order dan pembayaran akan muncul di sini." %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

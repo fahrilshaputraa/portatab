@@ -96,6 +96,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "apps.tenants.context_processors.tenant_context",
                 "apps.platform_admin.context_processors.platform_admin_context",
+                "apps.notifications.context_processors.unread_notifications",
             ],
         },
     },
