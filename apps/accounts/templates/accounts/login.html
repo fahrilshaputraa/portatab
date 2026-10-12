@@ -16,7 +16,7 @@
     {% csrf_token %}
     {% include "components/_field.html" with field=form.username %}
     {% include "components/_field.html" with field=form.password %}
-    <button type="submit" class="mt-8 inline-flex items-center justify-center rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">
+    <button type="submit" class="btn btn-primary btn-block mt-8">
       Masuk
     </button>
   </form>

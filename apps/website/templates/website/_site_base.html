@@ -1,0 +1,84 @@
+{% load static %}<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PortaTap{% endblock %}</title>
+  <meta name="description" content="{% block description %}PortaTap membantu bisnis F&B menerima pesanan lewat QR meja, mengelola kasir dan dapur, serta memantau penjualan.{% endblock %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="min-h-full bg-canvas-cream text-ink-charcoal antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-16 focus:top-16 focus:z-50 focus:rounded-full focus:bg-electric-cobalt focus:px-24 focus:py-12 focus:text-pure-white">
+    Lewati ke konten
+  </a>
+
+  <header class="sticky top-0 z-40 border-b border-hairline bg-pure-white/95 backdrop-blur">
+    <nav class="mx-auto flex h-72 max-w-page items-center justify-between gap-16 px-24" aria-label="Navigasi utama">
+      <a href="{% url 'website:landing' %}" class="text-heading font-semibold tracking-tight text-ink-charcoal">PortaTap</a>
+
+      <div class="hidden items-center gap-32 text-body-sm font-medium md:flex">
+        <a href="{% url 'website:landing' %}#produk" class="text-ink-charcoal hover:text-electric-cobalt">Produk</a>
+        <a href="{% url 'website:landing' %}#harga" class="text-ink-charcoal hover:text-electric-cobalt">Harga</a>
+        <a href="{% url 'website:blog_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Blog</a>
+        <a href="{% url 'website:news_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Berita</a>
+      </div>
+
+      <div class="flex shrink-0 items-center gap-8 text-body-sm font-medium">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'tenants:dashboard' %}" class="btn btn-primary">Buka dashboard</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="hidden px-8 py-10 text-ink-charcoal hover:text-electric-cobalt sm:block">Masuk</a>
+          <a href="{% url 'accounts:register' %}" class="btn btn-primary">Mulai gratis</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t border-hairline bg-pure-white">
+    <div class="mx-auto max-w-page px-24 py-48">
+      <div class="grid grid-cols-2 gap-32 md:grid-cols-4">
+        <div class="col-span-2 md:col-span-1">
+          <p class="text-heading-sm font-semibold text-ink-charcoal">PortaTap</p>
+          <p class="mt-8 max-w-64 text-body-sm text-slate-gray">
+            Pemesanan QR dan operasional untuk bisnis makanan dan minuman.
+          </p>
+        </div>
+        <div>
+          <p class="text-body-sm font-semibold text-ink-charcoal">Produk</p>
+          <ul class="mt-12 flex flex-col gap-8 text-body-sm text-slate-gray">
+            <li><a href="{% url 'website:landing' %}#produk" class="hover:text-electric-cobalt">Fitur</a></li>
+            <li><a href="{% url 'website:landing' %}#harga" class="hover:text-electric-cobalt">Harga</a></li>
+            <li><a href="{% url 'website:landing' %}#cara-kerja" class="hover:text-electric-cobalt">Cara kerja</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-body-sm font-semibold text-ink-charcoal">Konten</p>
+          <ul class="mt-12 flex flex-col gap-8 text-body-sm text-slate-gray">
+            <li><a href="{% url 'website:blog_list' %}" class="hover:text-electric-cobalt">Blog</a></li>
+            <li><a href="{% url 'website:news_list' %}" class="hover:text-electric-cobalt">Berita</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-body-sm font-semibold text-ink-charcoal">Akun</p>
+          <ul class="mt-12 flex flex-col gap-8 text-body-sm text-slate-gray">
+            <li><a href="{% url 'accounts:login' %}" class="hover:text-electric-cobalt">Masuk</a></li>
+            <li><a href="{% url 'accounts:register' %}" class="hover:text-electric-cobalt">Daftar</a></li>
+            {% if is_platform_admin %}
+              <li><a href="{% url 'website_admin:post_list' %}" class="hover:text-electric-cobalt">Kelola konten</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-48 flex flex-wrap items-center justify-between gap-12 border-t border-hairline pt-24 text-caption text-steel-gray">
+        <p>© {% now "Y" %} PortaTap. Semua hak dilindungi.</p>
+        <p>Dibuat untuk bisnis F&amp;B di Indonesia.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

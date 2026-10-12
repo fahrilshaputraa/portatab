@@ -73,4 +73,186 @@
     font-size: var(--text-body);
     line-height: 1.56;
   }
+
+  /* Keyboard users must always see where focus is (WCAG 2.4.7). Declared once
+   * for every operable control instead of per component. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--color-electric-cobalt);
+    outline-offset: 2px;
+  }
+
+  /* Tailwind preflight leaves buttons with the default cursor. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  /* Honour the OS reduced-motion preference. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Pill button system (DESIGN.md: 48px radius, cobalt is the only filled action).
+ * Defined once so templates compose "btn btn-primary" instead of repeating
+ * utility strings across every page. */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    border-radius: 9999px;
+    padding: 12px 24px;
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+  .btn-lg {
+    padding: 14px 32px;
+    font-size: var(--text-body);
+  }
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: var(--text-caption);
+  }
+  .btn-primary {
+    background: var(--color-electric-cobalt);
+    color: var(--color-pure-white);
+  }
+  .btn-primary:hover {
+    background: var(--color-deep-cobalt);
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-hairline);
+    background: var(--color-pure-white);
+    color: var(--color-ink-charcoal);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-powder-blue);
+  }
+  .btn-dark {
+    background: var(--color-ink-charcoal);
+    color: var(--color-pure-white);
+  }
+  .btn-danger {
+    border: 1px solid var(--color-hairline);
+    background: var(--color-pure-white);
+    color: #b91c1c;
+  }
+  .btn-danger:hover {
+    border-color: #fecaca;
+  }
+  .btn-block {
+    width: 100%;
+  }
+}
+
+/* Product screenshot frame — one definition reused by every showcase preview. */
+@layer components {
+  .device {
+    overflow: hidden;
+    border-radius: var(--radius-3xl);
+    border: 1px solid var(--color-hairline);
+    background: var(--color-pure-white);
+    box-shadow: var(--shadow-lg);
+  }
+  .device-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--color-hairline);
+    padding: 12px 16px;
+  }
+  .device-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 9999px;
+    background: var(--color-faint-gray);
+  }
+  .device-body {
+    padding: 16px;
+  }
+}
+
+/* Rendered Markdown for blog/news articles. */
+@layer components {
+  .prose-portatap > :first-child {
+    margin-top: 0;
+  }
+  .prose-portatap p,
+  .prose-portatap ul,
+  .prose-portatap ol,
+  .prose-portatap blockquote {
+    margin-top: 16px;
+  }
+  .prose-portatap h2 {
+    margin-top: 40px;
+    font-size: var(--text-heading);
+    font-weight: 600;
+    line-height: 1.33;
+  }
+  .prose-portatap h3 {
+    margin-top: 32px;
+    font-size: var(--text-heading-sm);
+    font-weight: 600;
+    line-height: 1.38;
+  }
+  .prose-portatap ul {
+    list-style: disc;
+    padding-left: 24px;
+  }
+  .prose-portatap ol {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+  .prose-portatap li {
+    margin-top: 4px;
+  }
+  .prose-portatap a {
+    color: var(--color-electric-cobalt);
+    text-decoration: underline;
+  }
+  .prose-portatap strong {
+    font-weight: 600;
+  }
+  .prose-portatap blockquote {
+    border-left: 2px solid var(--color-hairline);
+    padding-left: 16px;
+    color: var(--color-slate-gray);
+  }
+  .prose-portatap code {
+    background: var(--color-lavender-mist);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+  }
+  .prose-portatap img {
+    border-radius: 16px;
+  }
+  .prose-portatap hr {
+    border-color: var(--color-hairline);
+  }
 }

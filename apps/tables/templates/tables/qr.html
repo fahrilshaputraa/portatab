@@ -17,7 +17,7 @@
     <form method="post" action="{% url 'tables:rotate_qr' table.pk %}"
           onsubmit="return confirm('Ganti token QR? QR lama tidak akan berlaku lagi.');">
       {% csrf_token %}
-      <button type="submit" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Ganti token QR</button>
+      <button type="submit" class="btn btn-ghost">Ganti token QR</button>
     </form>
   </div>
 </div>

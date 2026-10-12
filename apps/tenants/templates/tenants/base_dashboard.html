@@ -28,6 +28,11 @@
 
       <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Laporan</p>
       <a href="{% url 'reports:sales' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Laporan Penjualan</a>
+
+      {% if is_platform_admin %}
+        <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Platform</p>
+        <a href="{% url 'website_admin:post_list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Kelola Konten</a>
+      {% endif %}
     </nav>
   </aside>
 
@@ -61,7 +66,7 @@
         <span class="text-slate-gray">{{ request.user.name }}</span>
         <form method="post" action="{% url 'accounts:logout' %}">
           {% csrf_token %}
-          <button type="submit" class="rounded-full border border-hairline px-16 py-8 hover:border-powder-blue">Keluar</button>
+          <button type="submit" class="btn btn-ghost btn-sm">Keluar</button>
         </form>
       </div>
     </header>

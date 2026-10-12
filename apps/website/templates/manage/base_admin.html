@@ -1,0 +1,32 @@
+{% load static %}<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Admin Platform — PortaTap{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="min-h-full bg-canvas-cream text-ink-charcoal antialiased">
+  <header class="border-b border-hairline bg-pure-white">
+    <div class="mx-auto flex h-72 max-w-page items-center justify-between gap-24 px-24">
+      <div class="flex items-center gap-24">
+        <span class="text-heading font-semibold text-ink-charcoal">PortaTap</span>
+        <span class="rounded-full bg-lavender-mist px-12 py-6 text-caption font-medium text-vivid-violet">Admin platform</span>
+      </div>
+      <nav class="flex items-center gap-24 text-body-sm font-medium">
+        <a href="{% url 'website_admin:post_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Konten</a>
+        <a href="{% url 'website:landing' %}" class="text-slate-gray hover:text-electric-cobalt">Lihat situs</a>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-ghost btn-sm">Keluar</button>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-page px-24 py-32">
+    {% include "partials/_messages.html" %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

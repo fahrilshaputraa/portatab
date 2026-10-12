@@ -1,19 +1,14 @@
 {% comment %}
-Pill button (DESIGN.md: 48px radius, cobalt fill for primary).
-Params: label, variant ("primary"|"ghost", default "primary"), type ("button"|"submit"), href
+Link styled as a pill button. Styles live in the `.btn` component classes so the
+design tokens are defined once (see static/css/input.css).
+
+Params:
+  label   — button text
+  href    — destination (required; use <button class="btn btn-primary"> for submits)
+  variant — "primary" | "ghost" | "dark" | "danger" (default "primary")
+  size    — "sm" | "md" | "lg" (default "md")
+  block   — truthy makes it full width
+
 {% endcomment %}
-{% if href %}
-  <a href="{{ href }}"
-     class="inline-flex items-center justify-center rounded-full px-24 py-12 text-body-sm font-medium transition
-            {% if variant == 'ghost' %}border border-hairline bg-pure-white text-ink-charcoal hover:border-powder-blue
-            {% else %}bg-electric-cobalt text-pure-white hover:bg-deep-cobalt{% endif %}">
-    {{ label }}
-  </a>
-{% else %}
-  <button type="{{ type|default:'button' }}"
-          class="inline-flex items-center justify-center rounded-full px-24 py-12 text-body-sm font-medium transition
-                 {% if variant == 'ghost' %}border border-hairline bg-pure-white text-ink-charcoal hover:border-powder-blue
-                 {% else %}bg-electric-cobalt text-pure-white hover:bg-deep-cobalt{% endif %}">
-    {{ label }}
-  </button>
-{% endif %}
+<a href="{{ href }}"
+   class="btn btn-{{ variant|default:'primary' }}{% if size == 'sm' %} btn-sm{% elif size == 'lg' %} btn-lg{% endif %}{% if block %} btn-block{% endif %}">{{ label }}</a>

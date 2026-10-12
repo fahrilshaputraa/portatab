@@ -1,0 +1,45 @@
+{% extends "manage/base_admin.html" %}
+
+{% block title %}{% if post %}Ubah{% else %}Tulisan baru{% endif %} — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <a href="{% url 'website_admin:post_list' %}" class="text-body-sm text-electric-cobalt hover:underline">← Kembali ke daftar konten</a>
+  <h1 class="mt-8 text-heading-lg font-semibold text-ink-charcoal">
+    {% if post %}Ubah tulisan{% else %}Tulisan baru{% endif %}
+  </h1>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+
+    <div class="mt-8 flex flex-wrap items-center gap-16">
+      <button type="submit" class="btn btn-primary">
+        Simpan sebagai draft
+      </button>
+      <a href="{% url 'website_admin:post_list' %}" class="btn btn-ghost">Batal</a>
+    </div>
+  </form>
+
+  {% if post %}
+    <div class="mt-24 flex flex-wrap items-center gap-16 border-t border-hairline pt-24">
+      {% if post.status == 'PUBLISHED' %}
+        <span class="text-body-sm text-slate-gray">Status saat ini: terbit.</span>
+        <form method="post" action="{% url 'website_admin:post_unpublish' post.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-ghost btn-sm">Jadikan draft</button>
+        </form>
+      {% else %}
+        <span class="text-body-sm text-slate-gray">Status saat ini: draft.</span>
+        <form method="post" action="{% url 'website_admin:post_publish' post.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-primary btn-sm">Terbitkan</button>
+        </form>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

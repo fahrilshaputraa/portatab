@@ -46,7 +46,7 @@
               {% endif %}
               <input type="number" name="quantity" value="1" min="1"
                      class="w-64 rounded-full border border-hairline px-12 py-8 text-body-sm">
-              <button class="ml-auto rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">
+              <button class="btn btn-primary btn-sm ml-auto">
                 Tambah
               </button>
             </form>
@@ -67,7 +67,7 @@
           <p class="text-caption text-slate-gray">{{ cart_count }} item</p>
           <p class="text-body font-semibold text-ink-charcoal">Rp {{ cart_total }}</p>
         </div>
-        <a href="{% url 'menu:checkout' table.qr_token %}" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Checkout</a>
+        <a href="{% url 'menu:checkout' table.qr_token %}" class="btn btn-primary">Checkout</a>
       </div>
     </div>
   {% endif %}

@@ -1,0 +1,47 @@
+{% extends "website/_site_base.html" %}
+
+{% block title %}{{ post.title }} — PortaTap{% endblock %}
+{% block description %}{{ post.excerpt }}{% endblock %}
+
+{% block content %}
+<article class="mx-auto max-w-3xl px-24 py-88">
+  <a href="{% if kind == 'BLOG' %}{% url 'website:blog_list' %}{% else %}{% url 'website:news_list' %}{% endif %}"
+     class="text-body-sm font-medium text-electric-cobalt hover:underline">
+    <span aria-hidden="true">←</span>
+    {% if kind == 'BLOG' %}Semua tulisan blog{% else %}Semua berita{% endif %}
+  </a>
+
+  <header class="mt-24">
+    <p class="text-caption text-slate-gray">
+      {% if kind == 'BLOG' %}Blog{% else %}Berita{% endif %}
+      {% if post.published_at %}· {{ post.published_at|date:"j F Y" }}{% endif %}
+      {% if post.author %}· {{ post.author.name }}{% endif %}
+    </p>
+    <h1 class="mt-8 text-heading-xl font-semibold leading-tight text-ink-charcoal">{{ post.title }}</h1>
+    {% if post.excerpt %}
+      <p class="mt-16 text-subheading text-slate-gray">{{ post.excerpt }}</p>
+    {% endif %}
+  </header>
+
+  {% if post.cover_image_url %}
+    <img src="{{ post.cover_image_url }}" alt="" class="mt-32 w-full rounded-2xl border border-hairline object-cover">
+  {% endif %}
+
+  <div class="prose-portatap mt-32 flex flex-col gap-16 text-body text-ink-charcoal">
+    {{ body_html|safe }}
+  </div>
+
+  {% if related %}
+    <section class="mt-64 border-t border-hairline pt-32">
+      <h2 class="text-heading-sm font-semibold text-ink-charcoal">
+        {% if kind == 'BLOG' %}Tulisan lain{% else %}Berita lain{% endif %}
+      </h2>
+      <div class="mt-16 grid grid-cols-1 gap-24 md:grid-cols-3">
+        {% for item in related %}
+          {% include "website/_post_card.html" with post=item %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</article>
+{% endblock %}

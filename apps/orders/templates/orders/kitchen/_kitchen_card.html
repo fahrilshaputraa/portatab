@@ -24,10 +24,10 @@
   <div class="mt-12 flex gap-8">
     {% if order.order_status == 'CONFIRMED' %}
       <button hx-post="{% url 'orders:prepare' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
-              class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Mulai proses</button>
+              class="btn btn-primary btn-sm">Mulai proses</button>
     {% elif order.order_status == 'PREPARING' %}
       <button hx-post="{% url 'orders:ready' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
-              class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Tandai siap</button>
+              class="btn btn-primary btn-sm">Tandai siap</button>
     {% else %}
       <span class="text-caption text-slate-gray">Menunggu diambil kasir</span>
     {% endif %}

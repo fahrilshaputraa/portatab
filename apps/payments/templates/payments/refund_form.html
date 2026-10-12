@@ -17,8 +17,8 @@
       {% include "components/_field.html" with field=field %}
     {% endfor %}
     <div class="mt-8 flex gap-16">
-      <button type="submit" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Ajukan refund</button>
-      <a href="{% url 'orders:detail' payment.order_id %}" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Batal</a>
+      <button type="submit" class="btn btn-primary">Ajukan refund</button>
+      <a href="{% url 'orders:detail' payment.order_id %}" class="btn btn-ghost">Batal</a>
     </div>
   </form>
 

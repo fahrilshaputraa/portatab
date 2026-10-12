@@ -1,0 +1,93 @@
+{% extends "manage/base_admin.html" %}
+{% load ui %}
+
+{% block title %}Kelola konten — PortaTap{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-16">
+  <div>
+    <h1 class="text-heading-lg font-semibold text-ink-charcoal">Konten</h1>
+    <p class="mt-4 text-body text-slate-gray">Blog dan berita yang tampil di situs publik.</p>
+  </div>
+  <a href="{% url 'website_admin:post_create' %}" class="btn btn-primary">Tulisan baru</a>
+</div>
+
+<form method="get" class="mt-24 flex flex-wrap items-end gap-12 text-body-sm">
+  <label class="flex flex-col gap-4">
+    Jenis
+    <select name="kind" class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
+      <option value="">Semua</option>
+      <option value="BLOG" {% if kind == 'BLOG' %}selected{% endif %}>Blog</option>
+      <option value="NEWS" {% if kind == 'NEWS' %}selected{% endif %}>Berita</option>
+    </select>
+  </label>
+  <label class="flex flex-col gap-4">
+    Status
+    <select name="status" class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
+      <option value="">Semua</option>
+      <option value="DRAFT" {% if status == 'DRAFT' %}selected{% endif %}>Draft</option>
+      <option value="PUBLISHED" {% if status == 'PUBLISHED' %}selected{% endif %}>Terbit</option>
+    </select>
+  </label>
+  <button type="submit" class="btn btn-ghost">Terapkan</button>
+</form>
+
+<div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+  <table class="w-full text-left text-body-sm">
+    <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+      <tr>
+        <th class="px-16 py-12 font-medium">Judul</th>
+        <th class="px-16 py-12 font-medium">Jenis</th>
+        <th class="px-16 py-12 font-medium">Status</th>
+        <th class="px-16 py-12 font-medium">Terbit</th>
+        <th class="px-16 py-12 font-medium text-right">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+        <tr class="border-b border-hairline last:border-0">
+          <td class="px-16 py-12">
+            <span class="font-medium text-ink-charcoal">{{ post.title }}</span>
+            {% if post.is_featured %}<span class="ml-8 text-caption text-vivid-violet">unggulan</span>{% endif %}
+            <p class="text-caption text-steel-gray">/{{ post.slug }}</p>
+          </td>
+          <td class="px-16 py-12 text-slate-gray">{{ post.get_kind_display }}</td>
+          <td class="px-16 py-12">
+            {% if post.status == 'PUBLISHED' %}
+              {% include "components/_badge.html" with label="Terbit" tone="success" %}
+            {% else %}
+              {% include "components/_badge.html" with label="Draft" tone="neutral" %}
+            {% endif %}
+          </td>
+          <td class="px-16 py-12 text-slate-gray">{{ post.published_at|date:"j M Y H:i"|default:"—" }}</td>
+          <td class="px-16 py-12">
+            <div class="flex justify-end gap-16">
+              {% if post.status == 'PUBLISHED' %}
+                <a href="{% if post.kind == 'BLOG' %}{% url 'website:blog_detail' post.slug %}{% else %}{% url 'website:news_detail' post.slug %}{% endif %}"
+                   class="text-slate-gray hover:text-electric-cobalt">Lihat</a>
+                <form method="post" action="{% url 'website_admin:post_unpublish' post.pk %}">
+                  {% csrf_token %}
+                  <button class="text-slate-gray hover:text-electric-cobalt">Jadikan draft</button>
+                </form>
+              {% else %}
+                <form method="post" action="{% url 'website_admin:post_publish' post.pk %}">
+                  {% csrf_token %}
+                  <button class="font-medium text-electric-cobalt hover:underline">Terbitkan</button>
+                </form>
+              {% endif %}
+              <a href="{% url 'website_admin:post_edit' post.pk %}" class="text-electric-cobalt hover:underline">Ubah</a>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="px-16 py-48 text-center text-slate-gray">
+            Belum ada tulisan.
+            <a href="{% url 'website_admin:post_create' %}" class="text-electric-cobalt hover:underline">Buat yang pertama</a>.
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

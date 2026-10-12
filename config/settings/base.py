@@ -61,6 +61,7 @@ LOCAL_APPS = [
     "apps.themes",
     "apps.reports",
     "apps.platform_admin",
+    "apps.website",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
@@ -94,6 +95,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.tenants.context_processors.tenant_context",
+                "apps.platform_admin.context_processors.platform_admin_context",
             ],
         },
     },

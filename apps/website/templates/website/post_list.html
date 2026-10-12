@@ -1,0 +1,25 @@
+{% extends "website/_site_base.html" %}
+
+{% block title %}{{ heading }} — PortaTap{% endblock %}
+{% block description %}{{ description }}{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-page px-24 py-88">
+  <header class="max-w-prose">
+    <h1 class="text-heading-xl font-semibold leading-tight text-ink-charcoal">{{ heading }}</h1>
+    <p class="mt-16 text-subheading text-slate-gray">{{ description }}</p>
+  </header>
+
+  <div class="mt-48">
+    {% if posts %}
+      <div class="grid grid-cols-1 gap-24 md:grid-cols-2 lg:grid-cols-3">
+        {% for post in posts %}
+          {% include "website/_post_card.html" with post=post %}
+        {% endfor %}
+      </div>
+    {% else %}
+      {% include "components/_empty_state.html" with title="Belum ada tulisan" message="Konten akan muncul di sini setelah diterbitkan." %}
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

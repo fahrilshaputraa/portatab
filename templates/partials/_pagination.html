@@ -11,7 +11,7 @@
                 hx-get="{{ request.path }}?page={{ page_obj.previous_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}"
                 hx-target="{{ pagination_target|default:'#table-region' }}"
                 hx-swap="outerHTML"
-                class="rounded-full border border-hairline bg-pure-white px-16 py-8 hover:border-powder-blue">
+                class="btn btn-ghost btn-sm">
           Sebelumnya
         </button>
       {% endif %}
@@ -20,7 +20,7 @@
                 hx-get="{{ request.path }}?page={{ page_obj.next_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}"
                 hx-target="{{ pagination_target|default:'#table-region' }}"
                 hx-swap="outerHTML"
-                class="rounded-full border border-hairline bg-pure-white px-16 py-8 hover:border-powder-blue">
+                class="btn btn-ghost btn-sm">
           Berikutnya
         </button>
       {% endif %}

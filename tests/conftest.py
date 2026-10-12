@@ -96,3 +96,15 @@ def other_owner(other_tenant, other_branch):
         tenant=other_tenant, user=user, role_code=RoleCode.OWNER, branches=[other_branch]
     )
     return user
+
+
+@pytest.fixture
+def platform_admin(db):
+    """A platform admin granted through the real service (not a raw flag)."""
+    from apps.platform_admin.services import grant_platform_admin
+
+    user = User.objects.create_user(
+        email="admin@portatap.test", password="pass12345", name="Admin Platform"
+    )
+    grant_platform_admin(user)
+    return user

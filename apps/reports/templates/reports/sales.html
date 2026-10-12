@@ -7,7 +7,7 @@
   <div class="flex flex-wrap items-center justify-between gap-16">
     <h1 class="text-heading-lg font-semibold text-ink-charcoal">Laporan Penjualan</h1>
     <a href="{% url 'reports:export_csv' %}?start={{ start|date:'Y-m-d' }}&end={{ end|date:'Y-m-d' }}"
-       class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Ekspor CSV</a>
+       class="btn btn-ghost">Ekspor CSV</a>
   </div>
 
   <form class="mt-24 flex flex-wrap items-end gap-12"
@@ -22,7 +22,7 @@
       <input type="date" name="end" value="{{ end|date:'Y-m-d' }}"
              class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
     </label>
-    <button type="submit" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Terapkan</button>
+    <button type="submit" class="btn btn-primary">Terapkan</button>
   </form>
 
   <div class="mt-24">

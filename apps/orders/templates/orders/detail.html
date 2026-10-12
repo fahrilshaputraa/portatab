@@ -47,17 +47,17 @@
           {% if payment.method == 'CASH' and payment.status != 'PAID' %}
             <form method="post" action="{% url 'payments:confirm_cash' payment.pk %}">
               {% csrf_token %}
-              <button class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Konfirmasi tunai</button>
+              <button class="btn btn-primary btn-sm">Konfirmasi tunai</button>
             </form>
           {% endif %}
           {% if payment.method == 'DIGITAL' and payment.status != 'PAID' %}
             <form method="post" action="{% url 'payments:initiate_digital' payment.pk %}">
               {% csrf_token %}
-              <button class="rounded-full border border-hairline px-16 py-8 text-body-sm hover:border-powder-blue">Bayar digital</button>
+              <button class="btn btn-ghost btn-sm">Bayar digital</button>
             </form>
           {% endif %}
           {% if payment.status == 'PAID' and payment.refundable_amount > 0 %}
-            <a href="{% url 'payments:refund_create' payment.pk %}" class="rounded-full border border-hairline px-16 py-8 text-body-sm hover:border-powder-blue">Ajukan refund</a>
+            <a href="{% url 'payments:refund_create' payment.pk %}" class="btn btn-ghost btn-sm">Ajukan refund</a>
           {% endif %}
         </div>
       </div>

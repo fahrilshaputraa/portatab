@@ -24,19 +24,19 @@
   <div class="mt-8 flex flex-wrap items-center justify-between gap-8">
     <p class="text-body font-semibold text-ink-charcoal">Rp {{ order.total }}</p>
     <div class="flex flex-wrap items-center gap-8">
-      <a href="{% url 'orders:detail' order.pk %}" class="rounded-full border border-hairline px-16 py-8 text-body-sm hover:border-powder-blue">Detail</a>
+      <a href="{% url 'orders:detail' order.pk %}" class="btn btn-ghost btn-sm">Detail</a>
 
       {% if order.order_status == 'PENDING' %}
         <button hx-post="{% url 'orders:accept' order.pk %}" hx-target="#order-{{ order.id }}" hx-swap="outerHTML"
-                class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Terima</button>
+                class="btn btn-primary btn-sm">Terima</button>
         <input id="reason-{{ order.id }}" name="reason" placeholder="Alasan tolak" maxlength="255"
                class="rounded-full border border-hairline px-16 py-8 text-body-sm">
         <button hx-post="{% url 'orders:reject' order.pk %}" hx-include="#reason-{{ order.id }}"
                 hx-target="#order-{{ order.id }}" hx-swap="outerHTML"
-                class="rounded-full border border-hairline px-16 py-8 text-body-sm text-red-600 hover:border-red-300">Tolak</button>
+                class="btn btn-danger btn-sm">Tolak</button>
       {% elif order.order_status == 'READY' %}
         <button hx-post="{% url 'orders:complete' order.pk %}" hx-target="#order-{{ order.id }}" hx-swap="outerHTML"
-                class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Selesai</button>
+                class="btn btn-primary btn-sm">Selesai</button>
       {% endif %}
     </div>
   </div>
