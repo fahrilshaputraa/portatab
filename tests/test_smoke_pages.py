@@ -14,6 +14,8 @@ from django.urls import reverse
         "team:list",
         "team:invite",
         "notifications:list",
+        "promotions:list",
+        "promotions:create",
         "catalog_products:list",
         "catalog_products:create",
         "catalog_categories:list",

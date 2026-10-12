@@ -118,6 +118,9 @@ SYSTEM_ROLES: dict[str, tuple[str, list[str]]] = {
             Perm.REFUNDS_REQUEST,
             Perm.CATALOG_VIEW,
             Perm.TABLES_VIEW,
+            # Cashiers apply vouchers at the till, so they may read promotions
+            # (docs/PRD.md §5) but never create or edit them.
+            Perm.PROMOTIONS_VIEW,
         ],
     ),
     RoleCode.KITCHEN: (

@@ -1,0 +1,81 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Promosi — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Promosi</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        Diskon untuk pesanan pelanggan. Tidak sama dengan voucher langganan PortaTap.
+      </p>
+    </div>
+    <a href="{% url 'promotions:create' %}" class="btn btn-primary">Buat promosi</a>
+  </div>
+
+  <div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <table class="w-full text-left text-body-sm">
+      <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+        <tr>
+          <th class="px-16 py-12 font-medium">Kode</th>
+          <th class="px-16 py-12 font-medium">Diskon</th>
+          <th class="px-16 py-12 font-medium">Min. belanja</th>
+          <th class="px-16 py-12 font-medium">Kuota</th>
+          <th class="px-16 py-12 font-medium">Periode</th>
+          <th class="px-16 py-12 font-medium">Status</th>
+          <th class="px-16 py-12 font-medium text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for promotion in promotions %}
+          <tr class="border-b border-hairline last:border-0">
+            <td class="px-16 py-12">
+              <span class="font-medium text-ink-charcoal">{{ promotion.code }}</span>
+              <p class="text-caption text-steel-gray">{{ promotion.name }}</p>
+            </td>
+            <td class="px-16 py-12 text-slate-gray">
+              {% if promotion.discount_type == 'PERCENTAGE' %}
+                {{ promotion.discount_value|floatformat:"0g" }}%
+              {% else %}
+                Rp {{ promotion.discount_value|floatformat:"0g" }}
+              {% endif %}
+              {% if promotion.max_discount_amount %}
+                <span class="text-caption">(maks Rp {{ promotion.max_discount_amount|floatformat:"0g" }})</span>
+              {% endif %}
+            </td>
+            <td class="px-16 py-12 text-slate-gray">Rp {{ promotion.min_order_amount|floatformat:"0g" }}</td>
+            <td class="px-16 py-12 text-slate-gray">
+              {% if promotion.total_quota %}
+                {{ promotion.redeemed_count }}/{{ promotion.total_quota }}
+              {% else %}
+                {{ promotion.redeemed_count }}/∞
+              {% endif %}
+            </td>
+            <td class="px-16 py-12 text-slate-gray">
+              {{ promotion.starts_at|date:"j M"|default:"kapan saja" }} –
+              {{ promotion.ends_at|date:"j M Y"|default:"tanpa batas" }}
+            </td>
+            <td class="px-16 py-12">{{ promotion.get_status_display }}</td>
+            <td class="px-16 py-12 text-right">
+              <a href="{% url 'promotions:edit' promotion.pk %}" class="text-electric-cobalt hover:underline">Ubah</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="px-16 py-48 text-center text-slate-gray">
+              Belum ada promosi.
+              <a href="{% url 'promotions:create' %}" class="text-electric-cobalt hover:underline">Buat yang pertama</a>.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="mt-8 text-caption text-steel-gray">
+    Kuota dan batas per pelanggan dihitung ulang di server saat checkout, dan dikembalikan
+    kalau order ditolak atau dibatalkan.
+  </p>
+</div>
+{% endblock %}

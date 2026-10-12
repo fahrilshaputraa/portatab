@@ -172,6 +172,7 @@ def checkout(request, qr_token):
                     table=table,
                     customer=customer,
                     customer_note=form.cleaned_data["customer_note"],
+                    promotion_code=form.cleaned_data["promotion_code"],
                     payment_method=form.cleaned_data["payment_method"],
                     source=OrderSource.QR,
                     items=[

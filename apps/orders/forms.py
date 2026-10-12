@@ -27,3 +27,9 @@ class CheckoutForm(StyledFormMixin, forms.Form):
         required=False,
         widget=forms.Textarea(attrs={"rows": 2}),
     )
+    promotion_code = forms.CharField(
+        label="Kode promo (opsional)",
+        max_length=64,
+        required=False,
+        help_text="Diskon dihitung ulang di server setelah kode diperiksa.",
+    )

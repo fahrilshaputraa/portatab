@@ -31,6 +31,7 @@ from apps.orders.models import (
     OrderStatusHistory,
 )
 from apps.payments.services import create_payment_for_order
+from apps.promotions import services as promotion_services
 from apps.tenants.services import record_audit
 
 if TYPE_CHECKING:
@@ -97,6 +98,7 @@ def checkout(
     source: str = OrderSource.QR,
     actor: User | None = None,
     idempotency_key: str | None = None,
+    promotion_code: str | None = None,
 ) -> tuple[Order, bool]:
     """Create one order from a validated cart. Returns ``(order, created)``.
 
@@ -155,6 +157,22 @@ def checkout(
             }
         )
 
+    # A promotion discount is recalculated here; the browser never supplies it.
+    discount_total = Decimal("0.00")
+    promotion = None
+    if promotion_code:
+        promotion = promotion_services.find_promotion(
+            tenant=branch.tenant, code=promotion_code
+        )
+        if promotion is None:
+            raise OrderError("Kode promo tidak ditemukan.")
+        try:
+            promotion, discount_total = promotion_services.lock_and_evaluate(
+                promotion=promotion, subtotal=subtotal, branch=branch, customer=customer
+            )
+        except promotion_services.PromotionError as exc:
+            raise OrderError(str(exc)) from exc
+
     order = _create_order_with_number(
         branch=branch,
         table=table,
@@ -163,7 +181,8 @@ def checkout(
         customer_note=customer_note,
         order_source=source,
         subtotal=subtotal,
-        total=subtotal,
+        discount_total=discount_total,
+        total=subtotal - discount_total,
         idempotency_key=idempotency_key,
     )
 
@@ -194,6 +213,13 @@ def checkout(
         to_status=OrderStatus.PENDING,
         reason="Checkout",
     )
+    if promotion is not None:
+        promotion_services.record_redemption(
+            promotion=promotion,
+            order=order,
+            customer=customer,
+            discount=discount_total,
+        )
     create_payment_for_order(order=order, method=payment_method)
     record_audit(
         action="order.created",
@@ -259,6 +285,7 @@ def transition_order(
         release_order_reservations(
             order=order, actor=actor, reason=reason or "Order ditolak/dibatalkan"
         )
+        promotion_services.release_promotions(order=order)
     elif to_status == OrderStatus.PREPARING:
         consume_order_reservations(order=order, actor=actor, reason="Mulai diproses")
     elif to_status == OrderStatus.READY:
