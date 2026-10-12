@@ -329,3 +329,42 @@ def fail_refund(*, refund: Refund, actor, failure_reason: str) -> Refund:
         after={"failure_reason": failure_reason},
     )
     return refund
+
+
+def process_digital_refund(*, refund: Refund, actor=None, client=None) -> Refund:
+    """Send a digital refund to the provider and record the real outcome.
+
+    Cash refunds are completed by staff confirming the cash was handed back; this
+    path is only for payments settled through the provider.
+    """
+    from apps.payments.providers.midtrans import MidtransClient, MidtransError
+
+    if refund.payment.method != PaymentMethod.DIGITAL:
+        raise PaymentError("Refund digital hanya untuk pembayaran digital.")
+
+    refund = Refund.objects.get(pk=refund.pk)
+    if refund.status not in OPEN_REFUND_STATUSES:
+        raise PaymentError("Refund ini tidak dalam status yang bisa diproses.")
+
+    if refund.status == RefundStatus.REQUESTED:
+        refund = approve_refund(refund=refund, actor=actor)
+
+    refund.status = RefundStatus.PROCESSING
+    refund.save(update_fields=["status", "updated_at"])
+
+    reference = refund.payment.provider_reference or midtrans_order_id(refund.payment)
+    client = client or MidtransClient.from_settings()
+    try:
+        result = client.refund(
+            order_id=reference,
+            amount=int(refund.amount),
+            reason=refund.reason or "Refund pesanan",
+        )
+    except MidtransError as exc:
+        return fail_refund(refund=refund, actor=actor, failure_reason=str(exc))
+
+    return complete_refund(
+        refund=refund,
+        actor=actor,
+        provider_reference=str(result.get("refund_key") or result.get("transaction_id") or ""),
+    )

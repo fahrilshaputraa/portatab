@@ -111,6 +111,25 @@ class MidtransClient:
             raise MidtransError("Gagal mengambil status transaksi Midtrans.") from exc
         return response.json()
 
+    def refund(self, *, order_id: str, amount: int | str, reason: str = "") -> dict:
+        """Ask the provider to refund a settled transaction."""
+        payload: dict = {"amount": amount, "reason": reason or "Refund"}
+        try:
+            response = httpx.post(
+                f"{self.api_base_url}/{order_id}/refund",
+                json=payload,
+                headers={
+                    "Authorization": self._auth_header(),
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+        except httpx.HTTPError as exc:  # pragma: no cover - network path
+            raise MidtransError("Gagal meminta refund ke Midtrans.") from exc
+        return response.json()
+
 
 def verify_signature(payload: dict, *, server_key: str) -> bool:
     """Verify Midtrans' ``signature_key`` = sha512(order_id + status_code + gross_amount + key)."""

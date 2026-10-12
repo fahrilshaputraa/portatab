@@ -69,6 +69,12 @@
                       <button class="text-electric-cobalt hover:underline">Setujui</button>
                     </form>
                   {% endif %}
+                  {% if refund.payment.method == 'DIGITAL' and refund.status != 'SUCCEEDED' and refund.status != 'FAILED' %}
+                    <form method="post" action="{% url 'payments:refund_process' refund.pk %}">
+                      {% csrf_token %}
+                      <button class="text-electric-cobalt hover:underline">Proses ke penyedia</button>
+                    </form>
+                  {% endif %}
                   {% if refund.status == 'APPROVED' or refund.status == 'PROCESSING' or refund.status == 'REQUESTED' %}
                     <form method="post" action="{% url 'payments:refund_complete' refund.pk %}">
                       {% csrf_token %}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="t">
+  <title id="t">PortaTap concept A — Pulse Modules</title>
+  <g fill="#121722">
+    <path fill-rule="evenodd" d="M76 24 H180 A52 52 0 0 1 232 76 V180 A52 52 0 0 1 180 232 H76 A52 52 0 0 1 24 180 V76 A52 52 0 0 1 76 24 Z M88 48 H168 A40 40 0 0 1 208 88 V168 A40 40 0 0 1 168 208 H88 A40 40 0 0 1 48 168 V88 A40 40 0 0 1 88 48 Z"/>
+    <path fill-rule="evenodd" d="M96 64 H160 A32 32 0 0 1 192 96 V160 A32 32 0 0 1 160 192 H96 A32 32 0 0 1 64 160 V96 A32 32 0 0 1 96 64 Z M114 88 H142 A26 26 0 0 1 168 114 V142 A26 26 0 0 1 142 168 H114 A26 26 0 0 1 88 142 V114 A26 26 0 0 1 114 88 Z"/>
+    <path d="M118 104 H138 A14 14 0 0 1 152 118 V138 A14 14 0 0 1 138 152 H118 A14 14 0 0 1 104 138 V118 A14 14 0 0 1 118 104 Z"/>
+  </g>
+</svg>

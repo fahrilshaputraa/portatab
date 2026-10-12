@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 from apps.accounts.roles import Perm
 from apps.payments import services
 from apps.payments.forms import RefundForm
-from apps.payments.models import Payment, Refund
+from apps.payments.models import Payment, Refund, RefundStatus
 from apps.payments.webhooks import process_midtrans_notification
 from apps.tenants.permissions import require_permission, require_tenant
 
@@ -138,6 +138,32 @@ def refund_complete(request, pk):
         messages.error(request, str(exc))
     else:
         messages.success(request, "Refund diselesaikan.")
+    return redirect("payments:list")
+
+
+@login_required
+@require_tenant
+@require_permission(Perm.REFUNDS_APPROVE)
+@require_POST
+def refund_process(request, pk):
+    """Send a digital refund to the provider and record the real outcome."""
+    refund = get_object_or_404(
+        Refund.objects.select_related("payment"), pk=pk, payment__order__branch=request.branch
+    )
+    try:
+        services.process_digital_refund(refund=refund, actor=request.user)
+    except services.PaymentError as exc:
+        messages.error(request, str(exc))
+    else:
+        refund.refresh_from_db()
+        if refund.status == RefundStatus.SUCCEEDED:
+            messages.success(request, "Refund diproses oleh penyedia pembayaran.")
+        else:
+            messages.error(
+                request,
+                f"Refund belum berhasil ({refund.get_status_display()}). "
+                "Periksa catatan kegagalan dan tindak lanjuti.",
+            )
     return redirect("payments:list")
 
 

@@ -11,4 +11,5 @@ urlpatterns = [
     path("<uuid:pk>/refund/", views.refund_create, name="refund_create"),
     path("refunds/<uuid:pk>/approve/", views.refund_approve, name="refund_approve"),
     path("refunds/<uuid:pk>/complete/", views.refund_complete, name="refund_complete"),
+    path("refunds/<uuid:pk>/process/", views.refund_process, name="refund_process"),
 ]
