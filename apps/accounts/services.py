@@ -1,14 +1,20 @@
 """Identity/access domain services.
 
-Single source of truth for role seeding and membership management so onboarding,
-invitations and admin tools all go through the same code path.
+Single source of truth for role seeding, membership management and staff
+invitations so onboarding, invitations and admin tools all share one code path.
 """
 
+from datetime import timedelta
+
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.db import transaction
+from django.urls import reverse
 from django.utils import timezone
 
 from apps.accounts.models import (
     BranchMembership,
+    Invitation,
     Membership,
     MembershipStatus,
     Permission,
@@ -16,6 +22,10 @@ from apps.accounts.models import (
     RolePermission,
 )
 from apps.accounts.roles import ALL_PERMISSIONS, SYSTEM_ROLES
+
+User = get_user_model()
+
+INVITATION_TTL_DAYS = 7
 
 
 def ensure_permissions() -> None:
@@ -81,3 +91,123 @@ def create_membership(
         BranchMembership.objects.get_or_create(membership=membership, branch=branch)
 
     return membership
+
+
+# ---------------------------------------------------------------------------
+# Team & access
+# ---------------------------------------------------------------------------
+
+
+def invitation_url(invitation, request=None) -> str:
+    path = reverse("accounts:invitation_accept", args=[invitation.token])
+    return request.build_absolute_uri(path) if request is not None else path
+
+
+@transaction.atomic
+def invite_staff(*, tenant, email: str, role_code: str, branches=None, actor=None):
+    """Invite someone to the team.
+
+    An existing account is added as an active member straight away; otherwise a
+    pending invitation is created and returned for the caller to email.
+    Returns ``(membership_or_None, invitation_or_None)``.
+    """
+    email = (email or "").strip().lower()
+    if not email:
+        raise ValueError("Email wajib diisi.")
+
+    role = Role.objects.get(tenant=tenant, code=role_code)
+    user = User.objects.filter(email=email).first()
+
+    if user is not None:
+        membership = create_membership(
+            tenant=tenant, user=user, role_code=role_code, branches=branches
+        )
+        return membership, None
+
+    invitation, _ = Invitation.objects.update_or_create(
+        tenant=tenant,
+        email=email,
+        status=MembershipStatus.INVITED,
+        defaults={
+            "role": role,
+            "invited_by": actor,
+            "expires_at": timezone.now() + timedelta(days=INVITATION_TTL_DAYS),
+        },
+    )
+    invitation.branches.set(branches or [])
+    return None, invitation
+
+
+def send_invitation_email(*, invitation, request=None) -> int:
+    """Email the invitation link. Uses whatever EMAIL_BACKEND is configured."""
+    url = invitation_url(invitation, request)
+    subject = f"Undangan bergabung ke {invitation.tenant.name} di PortaTap"
+    body = (
+        f"Halo,\n\n"
+        f"{invitation.tenant.name} mengundang Anda bergabung sebagai "
+        f"{invitation.role.name} di PortaTap.\n\n"
+        f"Buka tautan berikut untuk mengaktifkan akses Anda:\n{url}\n\n"
+        f"Tautan berlaku sampai {invitation.expires_at:%d %B %Y %H:%M}.\n\n"
+        f"Kalau Anda tidak merasa diundang, abaikan email ini.\n"
+    )
+    return send_mail(subject, body, None, [invitation.email], fail_silently=False)
+
+
+@transaction.atomic
+def accept_invitation(*, invitation, name: str = "", password: str | None = None):
+    """Activate a pending invitation, creating the account when needed."""
+    if invitation.status != MembershipStatus.INVITED:
+        raise ValueError("Undangan ini sudah tidak aktif.")
+    if invitation.expires_at <= timezone.now():
+        raise ValueError("Undangan ini sudah kedaluwarsa.")
+
+    email = invitation.email.lower()
+    user = User.objects.filter(email=email).first()
+    if user is None:
+        if not password:
+            raise ValueError("Kata sandi wajib diisi untuk akun baru.")
+        user = User.objects.create_user(
+            email=email, password=password, name=name.strip() or email.split("@")[0]
+        )
+
+    membership = create_membership(
+        tenant=invitation.tenant,
+        user=user,
+        role_code=invitation.role.code,
+        branches=list(invitation.branches.all()),
+    )
+    invitation.status = MembershipStatus.ACTIVE
+    invitation.accepted_at = timezone.now()
+    invitation.save(update_fields=["status", "accepted_at"])
+    return user, membership
+
+
+@transaction.atomic
+def set_membership_access(*, membership, role_code: str, branches=None) -> Membership:
+    """Change a member's role and exactly which branches they may operate on."""
+    role = Role.objects.get(tenant=membership.tenant, code=role_code)
+    membership.role = role
+    membership.save(update_fields=["role"])
+
+    wanted = list(branches or [])
+    BranchMembership.objects.filter(membership=membership).exclude(branch__in=wanted).delete()
+    for branch in wanted:
+        if branch.tenant_id != membership.tenant_id:
+            raise ValueError("Branch tidak berada di tenant yang sama.")
+        BranchMembership.objects.get_or_create(membership=membership, branch=branch)
+    return membership
+
+
+def set_membership_status(*, membership, status: str) -> Membership:
+    """Activate, suspend or revoke a membership."""
+    membership.status = status
+    if status == MembershipStatus.ACTIVE and membership.joined_at is None:
+        membership.joined_at = timezone.now()
+    membership.save(update_fields=["status", "joined_at"])
+    return membership
+
+
+def cancel_invitation(*, invitation) -> Invitation:
+    invitation.status = MembershipStatus.REVOKED
+    invitation.save(update_fields=["status"])
+    return invitation

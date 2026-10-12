@@ -1,0 +1,92 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Tim &amp; Akses — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Tim &amp; Akses</h1>
+      <p class="mt-4 text-body text-slate-gray">Kelola siapa yang boleh mengakses {{ current_tenant.name }}.</p>
+    </div>
+    <a href="{% url 'team:invite' %}" class="btn btn-primary">Undang staf</a>
+  </div>
+
+  <section class="mt-24">
+    <h2 class="text-heading-sm font-semibold text-ink-charcoal">Anggota</h2>
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Nama</th>
+            <th class="px-16 py-12 font-medium">Role</th>
+            <th class="px-16 py-12 font-medium">Akses cabang</th>
+            <th class="px-16 py-12 font-medium">Status</th>
+            <th class="px-16 py-12 font-medium text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in members %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12">
+                <span class="font-medium text-ink-charcoal">{{ member.user.name }}</span>
+                <p class="text-caption text-steel-gray">{{ member.user.email }}</p>
+              </td>
+              <td class="px-16 py-12 text-slate-gray">{{ member.role.name }}</td>
+              <td class="px-16 py-12 text-slate-gray">
+                {% for link in member.branch_memberships.all %}
+                  {{ link.branch.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                  Semua cabang
+                {% endfor %}
+              </td>
+              <td class="px-16 py-12">{{ member.get_status_display }}</td>
+              <td class="px-16 py-12 text-right">
+                <a href="{% url 'team:member_edit' member.pk %}" class="text-electric-cobalt hover:underline">Ubah</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="px-16 py-24 text-center text-slate-gray">Belum ada anggota.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mt-32">
+    <h2 class="text-heading-sm font-semibold text-ink-charcoal">Undangan menunggu</h2>
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Email</th>
+            <th class="px-16 py-12 font-medium">Role</th>
+            <th class="px-16 py-12 font-medium">Berlaku sampai</th>
+            <th class="px-16 py-12 font-medium text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invitation in invitations %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12 font-medium text-ink-charcoal">{{ invitation.email }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ invitation.role.name }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ invitation.expires_at|date:"j M Y H:i" }}</td>
+              <td class="px-16 py-12 text-right">
+                <form method="post" action="{% url 'team:invitation_cancel' invitation.pk %}">
+                  {% csrf_token %}
+                  <button class="text-slate-gray hover:text-red-600">Batalkan</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="px-16 py-24 text-center text-slate-gray">Tidak ada undangan menunggu.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-8 text-caption text-steel-gray">
+      Undangan berlaku 7 hari. Kalau email sudah punya akun PortaTap, orangnya langsung ditambahkan tanpa undangan.
+    </p>
+  </section>
+</div>
+{% endblock %}

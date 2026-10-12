@@ -1,0 +1,25 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Undang staf — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-xl">
+  <a href="{% url 'team:list' %}" class="text-body-sm text-electric-cobalt hover:underline">← Kembali ke tim</a>
+  <h1 class="mt-8 text-heading-lg font-semibold text-ink-charcoal">Undang staf</h1>
+  <p class="mt-8 text-body text-slate-gray">
+    Masukkan email, pilih role, dan tentukan cabang yang boleh diakses.
+  </p>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+    <div class="mt-8 flex gap-16">
+      <button type="submit" class="btn btn-primary">Kirim undangan</button>
+      <a href="{% url 'team:list' %}" class="btn btn-ghost">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Undangan — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-16 py-48">
+  <a href="/" class="mb-32 text-heading font-semibold text-ink-charcoal">PortaTap</a>
+
+  {% if unavailable %}
+    <h1 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">Undangan tidak berlaku</h1>
+    <p class="mt-16 text-body text-slate-gray">
+      Undangan ini sudah dipakai, dibatalkan, atau kedaluwarsa. Minta owner bisnis
+      mengirim undangan baru.
+    </p>
+    <div class="mt-24">
+      <a href="{% url 'accounts:login' %}" class="btn btn-ghost">Masuk</a>
+    </div>
+  {% else %}
+    <h1 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">
+      Bergabung ke {{ invitation.tenant.name }}
+    </h1>
+    <p class="mt-8 text-body text-slate-gray">
+      Anda diundang sebagai <strong>{{ invitation.role.name }}</strong> untuk
+      {{ invitation.email }}.
+    </p>
+
+    {% if needs_password %}
+      <div class="mt-32">
+        {% include "partials/_form_errors.html" %}
+      </div>
+      <form method="post" class="mt-24 flex flex-col gap-16">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ invitation.email }}" autocomplete="username">
+        {% for field in form %}
+          {% include "components/_field.html" with field=field %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block mt-8">Aktifkan akun</button>
+      </form>
+    {% else %}
+      <form method="post" class="mt-32">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Terima undangan</button>
+      </form>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

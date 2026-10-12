@@ -11,6 +11,8 @@ from django.urls import reverse
         "tenants:dashboard",
         "tenants:settings",
         "tenants:branch_create",
+        "team:list",
+        "team:invite",
         "catalog_products:list",
         "catalog_products:create",
         "catalog_categories:list",

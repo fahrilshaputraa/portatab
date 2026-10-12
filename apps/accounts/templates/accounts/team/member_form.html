@@ -1,0 +1,27 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Akses {{ membership.user.name }} — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-xl">
+  <a href="{% url 'team:list' %}" class="text-body-sm text-electric-cobalt hover:underline">← Kembali ke tim</a>
+  <h1 class="mt-8 text-heading-lg font-semibold text-ink-charcoal">{{ membership.user.name }}</h1>
+  <p class="mt-4 text-body-sm text-slate-gray">{{ membership.user.email }}</p>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+    <div class="mt-8 flex gap-16">
+      <button type="submit" class="btn btn-primary">Simpan akses</button>
+      <a href="{% url 'team:list' %}" class="btn btn-ghost">Batal</a>
+    </div>
+  </form>
+
+  <p class="mt-16 text-caption text-steel-gray">
+    Status <em>Dicabut</em> menutup akses akun ini ke tenant tanpa menghapus riwayatnya.
+  </p>
+</div>
+{% endblock %}

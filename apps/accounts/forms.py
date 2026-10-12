@@ -55,3 +55,17 @@ class RegistrationForm(StyledFormMixin, forms.Form):
             branch_name=data["branch_name"],
         )
         return user, tenant, branch
+
+
+class InvitationAcceptForm(StyledFormMixin, forms.Form):
+    """Only shown when the invited email has no account yet."""
+
+    name = forms.CharField(label="Nama Anda", max_length=255, required=False)
+    password1 = forms.CharField(label="Kata sandi", widget=forms.PasswordInput, min_length=8)
+    password2 = forms.CharField(label="Ulangi kata sandi", widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("password1") and cleaned.get("password1") != cleaned.get("password2"):
+            self.add_error("password2", "Kata sandi tidak sama.")
+        return cleaned

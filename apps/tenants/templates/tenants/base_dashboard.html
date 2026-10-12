@@ -29,6 +29,7 @@
       <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Laporan</p>
       <a href="{% url 'reports:sales' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Laporan Penjualan</a>
       <a href="{% url 'tenants:settings' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Pengaturan Bisnis</a>
+      <a href="{% url 'team:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Tim &amp; Akses</a>
 
       {% if is_platform_admin %}
         <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Platform</p>
