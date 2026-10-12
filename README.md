@@ -85,40 +85,78 @@ apps/
   orders/          # order, item snapshot, riwayat status, checkout, menu pelanggan
   payments/        # payment, attempt, refund, webhook, adapter Midtrans
   inventory/       # reservasi & ledger stok
-  notifications/   # notifikasi staf
-  promotions/      # promo pelanggan (skema)
-  subscriptions/   # plan, subscription, invoice, voucher (skema)
-  themes/          # template & publikasi tema (skema)
+  notifications/   # notifikasi staf + inbox
+  promotions/      # promo pelanggan
+  subscriptions/   # plan, subscription, invoice, voucher
+  themes/          # template & publikasi tema
   reports/         # laporan penjualan + ekspor CSV
-  platform_admin/  # administrasi platform (skema)
+  website/         # landing page publik, blog, berita, admin konten
+  platform_admin/  # konsol admin platform (tenant, audit, health)
 templates/         # layout & komponen bersama; `menu/` untuk pelanggan
-docs/              # PRD, ERD, ARCHITECTURE, BUSINESS-RULES, API-CONVENTIONS
+docs/              # PRD, ERD, ARCHITECTURE, BUSINESS-RULES, API-CONVENTIONS, DEPLOYMENT
 ```
 
 Template per-domain tinggal di `apps/<app>/templates/<app>/`; detail konvensi di
 [`templates/README.md`](./templates/README.md).
 
-## Yang sudah berjalan (MVP inti)
+## Yang sudah berjalan
+
+**Alur inti**
 
 - Fondasi multi-tenant: tenant, cabang, membership, role & permission,
   isolasi data, audit log.
-- Onboarding owner (registrasi → tenant → cabang pertama).
+- Onboarding owner (registrasi → tenant → cabang pertama) + trial otomatis.
 - Manajemen menu: kategori, produk, varian, harga & stok per cabang.
 - Meja & QR (termasuk cetak dan regenerasi token).
-- Menu QR pelanggan, keranjang, checkout idempoten.
+- Menu QR pelanggan, keranjang, checkout idempoten, lacak status.
 - Kasir: daftar order, terima/tolak, timer 3/5 menit.
 - Kitchen Display dengan gerbang pembayaran (order digital hanya masuk dapur
   setelah `PAID`).
-- Pembayaran tunai (konfirmasi kasir) dan digital (Midtrans + webhook idempoten).
-- Refund penuh dengan status, batas nominal, dan jejak audit.
+- Pembayaran tunai (konfirmasi kasir) dan digital (Midtrans + webhook idempoten
+  + rekonsiliasi terjadwal).
+- Refund penuh dengan status, batas nominal, jejak audit, dan refund digital
+  lewat penyedia.
 - Reservasi stok atomik + ledger pergerakan stok.
 - Laporan penjualan dasar + ekspor CSV.
 
-## Belum diimplementasikan (P1/P2)
+**Manajemen bisnis**
 
-Model/skema sudah ada, tetapi UI & alur bisnisnya belum dibangun:
-promosi pelanggan, subscription & voucher, Theme Editor, dan portal admin
-platform. Lihat prioritas P1/P2 di `docs/PRD.md` §23.
+- Pengaturan bisnis: profil, CRUD cabang, jeda penerimaan order, kebijakan
+  operasional (order tunai masuk dapur, ambang stok rendah).
+- Tim & Akses: undang staf lewat email, atur role + akses cabang, jaga agar
+  owner terakhir tidak bisa dicabut.
+- Promosi pelanggan: diskon nominal/persentase, kuota aman dari race, batas per
+  pelanggan, pemulihan kuota saat order dibatalkan.
+- Inbox notifikasi dengan badge belum dibaca.
+- Langganan: trial, ubah paket, invoice dengan snapshot harga, voucher, dan
+  penegakan batas paket di backend.
+- Tampilan Menu: pilih template, logo/banner/warna/layout, draft terpisah dari
+  versi terbit, validasi kontras warna.
+
+**Situs publik & platform**
+
+- Landing page publik, blog, dan berita; artikel ditulis lewat konsol admin.
+- Konsol admin platform: daftar & detail tenant, suspend/aktifkan, audit log,
+  dan system health.
+
+## Deployment
+
+Panduan deploy, variabel environment, job terjadwal, backup, dan checklist rilis
+ada di [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md).
+
+## Belum diimplementasikan
+
+Yang masih terbuka (jujur, bukan tersembunyi):
+
+- **Rate limiting** pada login, checkout publik, dan penukaran promo belum ada —
+  untuk sementara pasang di proxy.
+- **Uji beban/performa** belum dijalankan.
+- **Error tracking** (mis. Sentry) belum dipasang; sinyalnya masih log.
+- **Provider pembayaran kedua** butuh adapter sendiri di
+  `apps/payments/providers/`.
+- Keputusan produk di `docs/PRD.md` §27 (ambang refund, masa berlaku reservasi
+  stok, grace period langganan, retensi data) masih perlu ditetapkan.
+
 
 ## Keamanan
 
