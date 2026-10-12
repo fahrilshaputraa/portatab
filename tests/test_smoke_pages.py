@@ -40,6 +40,20 @@ def test_portal_pages_render(client, owner, branch, table, branch_product, url_n
 
 
 @pytest.mark.django_db
+@pytest.mark.parametrize(
+    "url_name",
+    [
+        "platform_console:tenant_list",
+        "platform_console:audit_log",
+        "platform_console:health",
+    ],
+)
+def test_platform_console_pages_render(client, platform_admin, tenant, url_name):
+    client.force_login(platform_admin)
+    assert client.get(reverse(url_name)).status_code == 200
+
+
+@pytest.mark.django_db
 def test_table_qr_page_renders(client, owner, table):
     client.force_login(owner)
     response = client.get(reverse("tables:qr", args=[table.pk]))

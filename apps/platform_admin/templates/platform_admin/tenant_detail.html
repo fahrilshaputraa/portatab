@@ -1,0 +1,88 @@
+{% extends "manage/base_admin.html" %}
+
+{% block title %}{{ tenant.name }} — Admin Platform{% endblock %}
+
+{% block content %}
+<a href="{% url 'platform_console:tenant_list' %}" class="text-body-sm text-electric-cobalt hover:underline">← Semua tenant</a>
+
+<div class="mt-8 flex flex-wrap items-center justify-between gap-16">
+  <div>
+    <h1 class="text-heading-lg font-semibold text-ink-charcoal">{{ tenant.name }}</h1>
+    <p class="mt-4 text-body-sm text-slate-gray">
+      {{ tenant.slug }} · {{ tenant.email|default:"tanpa email" }} · {{ tenant.get_status_display }}
+    </p>
+  </div>
+  <form method="post" action="{% url 'platform_console:tenant_status' tenant.pk %}"
+        onsubmit="return confirm('Ubah status tenant ini?');">
+    {% csrf_token %}
+    <button class="btn btn-ghost">
+      {% if tenant.status == 'ACTIVE' %}Tangguhkan{% else %}Aktifkan{% endif %}
+    </button>
+  </form>
+</div>
+
+<div class="mt-32 grid grid-cols-1 gap-16 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+    <p class="text-caption text-slate-gray">Paket</p>
+    <p class="mt-4 text-heading-sm font-semibold text-ink-charcoal">
+      {{ subscription.plan.name|default:"—" }}
+    </p>
+    {% if subscription %}
+      <p class="text-caption text-steel-gray">{{ subscription.get_status_display }}</p>
+    {% endif %}
+  </div>
+  <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+    <p class="text-caption text-slate-gray">Order (7 hari)</p>
+    <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">{{ orders_last_7d }}</p>
+  </div>
+  <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+    <p class="text-caption text-slate-gray">Order belum selesai</p>
+    <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">{{ orders_open }}</p>
+  </div>
+  <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+    <p class="text-caption text-slate-gray">Penjualan selesai (7 hari)</p>
+    <p class="mt-4 text-heading-sm font-semibold tabular-nums text-electric-cobalt">Rp {{ gross_last_7d|floatformat:"0g" }}</p>
+  </div>
+</div>
+
+<section class="mt-32">
+  <h2 class="text-heading-sm font-semibold text-ink-charcoal">Cabang</h2>
+  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <table class="w-full text-left text-body-sm">
+      <tbody>
+        {% for branch in branches %}
+          <tr class="border-b border-hairline last:border-0">
+            <td class="px-16 py-12 font-medium text-ink-charcoal">{{ branch.name }}</td>
+            <td class="px-16 py-12 text-slate-gray">{{ branch.code }}</td>
+            <td class="px-16 py-12 text-slate-gray">{{ branch.get_status_display }}</td>
+            <td class="px-16 py-12 text-slate-gray">
+              {% if branch.accepts_orders %}Menerima order{% else %}Dijeda{% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="px-16 py-24 text-center text-slate-gray">Belum ada cabang.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="mt-32">
+  <h2 class="text-heading-sm font-semibold text-ink-charcoal">Audit terakhir</h2>
+  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <table class="w-full text-left text-body-sm">
+      <tbody>
+        {% for log in recent_audit %}
+          <tr class="border-b border-hairline last:border-0">
+            <td class="px-16 py-12 font-medium text-ink-charcoal">{{ log.action }}</td>
+            <td class="px-16 py-12 text-slate-gray">{{ log.user.email|default:"sistem" }}</td>
+            <td class="px-16 py-12 text-caption text-steel-gray">{{ log.created_at|date:"j M Y H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td class="px-16 py-24 text-center text-slate-gray">Belum ada catatan audit.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "manage/base_admin.html" %}
+
+{% block title %}Audit log — Admin Platform{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap items-center justify-between gap-16">
+  <div>
+    <h1 class="text-heading-lg font-semibold text-ink-charcoal">Audit log</h1>
+    <p class="mt-4 text-body text-slate-gray">
+      Tindakan sensitif: order, pembayaran, refund, stok, langganan, dan konten.
+    </p>
+  </div>
+  <form method="get" class="flex items-end gap-12 text-body-sm">
+    <input type="search" name="action" value="{{ action }}" placeholder="Filter aksi, mis. refund"
+           class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
+    <button type="submit" class="btn btn-ghost">Filter</button>
+  </form>
+</div>
+
+<div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+  <table class="w-full text-left text-body-sm">
+    <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+      <tr>
+        <th class="px-16 py-12 font-medium">Waktu</th>
+        <th class="px-16 py-12 font-medium">Aksi</th>
+        <th class="px-16 py-12 font-medium">Tenant</th>
+        <th class="px-16 py-12 font-medium">Pelaku</th>
+        <th class="px-16 py-12 font-medium">Entitas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+        <tr class="border-b border-hairline last:border-0">
+          <td class="px-16 py-12 text-caption text-steel-gray">{{ log.created_at|date:"j M Y H:i:s" }}</td>
+          <td class="px-16 py-12 font-medium text-ink-charcoal">{{ log.action }}</td>
+          <td class="px-16 py-12 text-slate-gray">{{ log.tenant.name|default:"—" }}</td>
+          <td class="px-16 py-12 text-slate-gray">{{ log.user.email|default:"sistem" }}</td>
+          <td class="px-16 py-12 text-caption text-steel-gray">
+            {{ log.entity_type }}{% if log.entity_id %} · {{ log.entity_id }}{% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="px-16 py-48 text-center text-slate-gray">Tidak ada catatan.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-8 text-caption text-steel-gray">
+  Menampilkan maksimal 300 catatan terbaru. Audit log tidak menyimpan kata sandi,
+  token, atau data pembayaran sensitif.
+</p>
+{% endblock %}

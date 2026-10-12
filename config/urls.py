@@ -32,6 +32,7 @@ urlpatterns = [
     path("webhooks/", include("apps.payments.urls_webhooks")),
     path("r/", include("apps.orders.urls_menu")),
     path("manage/", include("apps.website.urls_manage")),
+    path("manage/console/", include("apps.platform_admin.urls")),
     path("", include("apps.website.urls")),
 ]
 

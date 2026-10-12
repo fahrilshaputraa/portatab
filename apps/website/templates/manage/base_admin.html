@@ -15,6 +15,9 @@
       </div>
       <nav class="flex items-center gap-24 text-body-sm font-medium">
         <a href="{% url 'website_admin:post_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Konten</a>
+        <a href="{% url 'platform_console:tenant_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Tenant</a>
+        <a href="{% url 'platform_console:audit_log' %}" class="text-ink-charcoal hover:text-electric-cobalt">Audit</a>
+        <a href="{% url 'platform_console:health' %}" class="text-ink-charcoal hover:text-electric-cobalt">Health</a>
         <a href="{% url 'website:landing' %}" class="text-slate-gray hover:text-electric-cobalt">Lihat situs</a>
         <form method="post" action="{% url 'accounts:logout' %}">
           {% csrf_token %}
