@@ -18,6 +18,7 @@ from apps.orders import services
 from apps.orders.forms import CheckoutForm
 from apps.orders.models import Order, OrderSource
 from apps.tables.models import Table
+from apps.themes import services as theme_services
 
 
 def _get_table(qr_token) -> Table:
@@ -106,6 +107,7 @@ def menu(request, qr_token):
             "cart_total": total,
             "cart_count": sum(line["quantity"] for line in lines),
             "accepts_orders": table.can_accept_orders,
+            "theme": theme_services.live_config(table.branch.tenant),
         },
     )
 

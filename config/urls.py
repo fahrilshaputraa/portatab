@@ -26,6 +26,7 @@ urlpatterns = [
     path("app/payments/", include("apps.payments.urls")),
     path("app/reports/", include("apps.reports.urls")),
     path("app/subscription/", include("apps.subscriptions.urls")),
+    path("app/appearance/", include("apps.themes.urls")),
     path("app/", include("apps.orders.urls")),
     path("app/", include("apps.tenants.urls")),
     path("webhooks/", include("apps.payments.urls_webhooks")),

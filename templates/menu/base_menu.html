@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div class="mx-auto min-h-screen max-w-2xl bg-canvas-cream pb-96">
+<div class="mx-auto min-h-screen max-w-2xl bg-canvas-cream pb-96"
+     style="--menu-primary: {{ theme.primary_color|default:'#0068f9' }}">
   <header class="sticky top-0 z-10 border-b border-hairline bg-pure-white/95 px-16 py-16 backdrop-blur">
     {% block header %}{% endblock %}
   </header>

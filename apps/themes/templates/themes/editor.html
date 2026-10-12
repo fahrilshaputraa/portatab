@@ -1,0 +1,81 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Tampilan Menu — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Tampilan Menu</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        Ubah tampilan QR menu. Draft tidak mengubah yang dilihat pelanggan sampai diterbitkan.
+      </p>
+    </div>
+    <a href="{% url 'themes:preview' %}" class="btn btn-ghost">Pratinjau draft</a>
+  </div>
+
+  {% if publication %}
+    <p class="mt-16 text-caption text-slate-gray">
+      Versi terbit: <strong>v{{ publication.version_number }}</strong>
+      · {{ publication.published_at|date:"j M Y H:i" }}
+    </p>
+  {% else %}
+    <p class="mt-16 text-caption text-amber-700">
+      Belum ada tema yang diterbitkan. Pelanggan masih melihat tampilan bawaan.
+    </p>
+  {% endif %}
+
+  <div class="mt-32 grid grid-cols-1 gap-24 lg:grid-cols-[1.2fr_1fr]">
+    <section class="rounded-2xl border border-hairline bg-pure-white p-24">
+      <form method="post" class="flex flex-col gap-16">
+        {% csrf_token %}
+        {% include "partials/_form_errors.html" %}
+        {% for field in form %}
+          {% include "components/_field.html" with field=field %}
+        {% endfor %}
+
+        <div class="mt-8 flex flex-wrap gap-16">
+          <button type="submit" name="save" class="btn btn-primary">Simpan draft</button>
+          <button type="submit" name="publish" class="btn btn-dark">Simpan &amp; terbitkan</button>
+        </div>
+      </form>
+      <p class="mt-16 text-caption text-steel-gray">
+        Kontras warna utama terhadap teks putih divalidasi di server (minimal 3:1). Warna
+        yang terlalu terang akan ditolak.
+      </p>
+    </section>
+
+    {# A live, local preview of the draft — no round trip needed. #}
+    <section class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm font-semibold text-ink-charcoal">Pratinjau cepat</p>
+      <div class="mt-16 rounded-3xl border border-hairline bg-pure-white p-16"
+           style="--menu-primary: {{ draft_config.primary_color }}">
+        {% if draft_config.banner_url %}
+          <img src="{{ draft_config.banner_url }}" alt="" class="mb-16 h-96 w-full rounded-2xl object-cover">
+        {% endif %}
+        <div class="flex items-center gap-12">
+          {% if draft_config.logo_url %}
+            <img src="{{ draft_config.logo_url }}" alt="" class="h-40 w-40 rounded-2xl object-cover">
+          {% endif %}
+          <p class="text-body-sm font-semibold text-ink-charcoal">{{ current_tenant.name }}</p>
+        </div>
+        <div class="mt-16 flex flex-col gap-12">
+          <div class="flex items-center justify-between gap-16 rounded-2xl border border-hairline p-12">
+            <div>
+              <p class="text-body-sm font-medium text-ink-charcoal">Kopi Susu</p>
+              <p class="text-caption text-slate-gray">Regular</p>
+            </div>
+            <div class="flex items-center gap-12">
+              <span class="text-body-sm font-semibold" style="color: var(--menu-primary)">Rp 18.000</span>
+              <span class="rounded-full px-16 py-8 text-caption font-medium text-pure-white" style="background: var(--menu-primary)">Tambah</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mt-12 text-caption text-steel-gray">
+        Tata letak: {% if draft_config.layout == 'grid' %}Grid{% else %}Daftar{% endif %}
+      </p>
+    </section>
+  </div>
+</div>
+{% endblock %}
