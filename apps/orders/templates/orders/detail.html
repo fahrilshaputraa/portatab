@@ -1,0 +1,81 @@
+{% extends "tenants/base_dashboard.html" %}
+{% load ui %}
+
+{% block title %}Order {{ order.order_number }} — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <a href="{% url 'orders:cashier' %}" class="text-body-sm text-electric-cobalt hover:underline">← Kembali ke kasir</a>
+  <div class="mt-8 flex flex-wrap items-center justify-between gap-8">
+    <h1 class="text-heading-lg font-semibold text-ink-charcoal">{{ order.order_number }}</h1>
+    <div class="flex gap-8">
+      {% include "components/_badge.html" with label=order.get_order_status_display tone=order.order_status|order_tone %}
+      {% include "components/_badge.html" with label=order.get_payment_status_display tone=order.payment_status|payment_tone %}
+    </div>
+  </div>
+  <p class="mt-4 text-body-sm text-slate-gray">
+    {{ order.branch.name }}{% if order.table %} · Meja {{ order.table.table_number }}{% endif %}
+    · {{ order.created_at|date:"d M Y H:i" }}
+  </p>
+
+  <section class="mt-24 rounded-2xl border border-hairline bg-pure-white p-24">
+    <h2 class="text-heading-sm font-semibold">Item</h2>
+    <table class="mt-12 w-full text-left text-body-sm">
+      <tbody>
+        {% for item in order.items.all %}
+          <tr class="border-b border-hairline last:border-0">
+            <td class="py-8">{{ item.quantity }}× {{ item.product_name_snapshot }}{% if item.variant_name_snapshot %} ({{ item.variant_name_snapshot }}){% endif %}</td>
+            <td class="py-8 text-right text-slate-gray">Rp {{ item.subtotal }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="mt-12 flex justify-between text-body font-semibold">
+      <span>Total</span><span>Rp {{ order.total }}</span>
+    </div>
+  </section>
+
+  <section class="mt-16 rounded-2xl border border-hairline bg-pure-white p-24">
+    <h2 class="text-heading-sm font-semibold">Pembayaran</h2>
+    {% for payment in order.payments.all %}
+      <div class="mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-surface-ivory p-16">
+        <div>
+          <p class="text-body-sm font-medium">{{ payment.get_method_display }} · Rp {{ payment.amount }}</p>
+          <p class="text-caption text-slate-gray">{{ payment.get_status_display }}{% if payment.provider_reference %} · {{ payment.provider_reference }}{% endif %}</p>
+        </div>
+        <div class="flex gap-8">
+          {% if payment.method == 'CASH' and payment.status != 'PAID' %}
+            <form method="post" action="{% url 'payments:confirm_cash' payment.pk %}">
+              {% csrf_token %}
+              <button class="rounded-full bg-electric-cobalt px-16 py-8 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Konfirmasi tunai</button>
+            </form>
+          {% endif %}
+          {% if payment.method == 'DIGITAL' and payment.status != 'PAID' %}
+            <form method="post" action="{% url 'payments:initiate_digital' payment.pk %}">
+              {% csrf_token %}
+              <button class="rounded-full border border-hairline px-16 py-8 text-body-sm hover:border-powder-blue">Bayar digital</button>
+            </form>
+          {% endif %}
+          {% if payment.status == 'PAID' and payment.refundable_amount > 0 %}
+            <a href="{% url 'payments:refund_create' payment.pk %}" class="rounded-full border border-hairline px-16 py-8 text-body-sm hover:border-powder-blue">Ajukan refund</a>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <p class="mt-8 text-body-sm text-slate-gray">Belum ada catatan pembayaran.</p>
+    {% endfor %}
+  </section>
+
+  <section class="mt-16 rounded-2xl border border-hairline bg-pure-white p-24">
+    <h2 class="text-heading-sm font-semibold">Riwayat status</h2>
+    <ul class="mt-12 flex flex-col gap-8 text-body-sm">
+      {% for entry in order.status_history.all %}
+        <li class="flex justify-between gap-8">
+          <span>{{ entry.from_status|default:"—" }} → {{ entry.to_status }}{% if entry.reason %} · {{ entry.reason }}{% endif %}</span>
+          <span class="text-caption text-slate-gray">{{ entry.created_at|date:"H:i" }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% if orders %}
+  <div class="grid grid-cols-1 gap-16 md:grid-cols-2 xl:grid-cols-3">
+    {% for order in orders %}
+      {% include "orders/kitchen/_kitchen_card.html" with order=order %}
+    {% endfor %}
+  </div>
+{% else %}
+  {% include "components/_empty_state.html" with title="Antrean dapur kosong" message="Order yang sudah dibayar (atau tunai yang diizinkan) akan muncul di sini." %}
+{% endif %}

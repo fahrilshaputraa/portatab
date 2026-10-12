@@ -1,0 +1,13 @@
+{% comment %}Renders one labelled form field. Params: field{% endcomment %}
+<div class="flex flex-col gap-4">
+  <label for="{{ field.id_for_label }}" class="text-body-sm font-medium text-ink-charcoal">
+    {{ field.label }}{% if field.field.required %} <span class="text-electric-cobalt">*</span>{% endif %}
+  </label>
+  {{ field }}
+  {% if field.help_text %}
+    <p class="text-caption text-steel-gray">{{ field.help_text }}</p>
+  {% endif %}
+  {% for error in field.errors %}
+    <p class="text-caption text-red-600">{{ error }}</p>
+  {% endfor %}
+</div>

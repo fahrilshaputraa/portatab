@@ -1,0 +1,12 @@
+{% comment %}
+Surface card header. Renders a titled surface; wrap extra body markup around the include.
+Params: title, subtitle (optional), card_class (optional)
+{% endcomment %}
+<section class="rounded-2xl border border-hairline bg-surface-ivory p-24 {{ card_class }}">
+  {% if title %}
+    <h2 class="text-heading-sm font-semibold text-ink-charcoal">{{ title }}</h2>
+  {% endif %}
+  {% if subtitle %}
+    <p class="mt-4 text-body-sm text-slate-gray">{{ subtitle }}</p>
+  {% endif %}
+</section>

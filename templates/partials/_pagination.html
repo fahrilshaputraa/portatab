@@ -1,0 +1,29 @@
+{% if page_obj.paginator.num_pages > 1 %}
+  <nav class="flex items-center justify-between gap-16 py-16 text-body-sm text-slate-gray"
+       aria-label="Pagination">
+    <span>
+      Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}
+      ({{ page_obj.paginator.count }} data)
+    </span>
+    <div class="flex gap-8">
+      {% if page_obj.has_previous %}
+        <button type="button"
+                hx-get="{{ request.path }}?page={{ page_obj.previous_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}"
+                hx-target="{{ pagination_target|default:'#table-region' }}"
+                hx-swap="outerHTML"
+                class="rounded-full border border-hairline bg-pure-white px-16 py-8 hover:border-powder-blue">
+          Sebelumnya
+        </button>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <button type="button"
+                hx-get="{{ request.path }}?page={{ page_obj.next_page_number }}{% if pagination_query %}&{{ pagination_query }}{% endif %}"
+                hx-target="{{ pagination_target|default:'#table-region' }}"
+                hx-swap="outerHTML"
+                class="rounded-full border border-hairline bg-pure-white px-16 py-8 hover:border-powder-blue">
+          Berikutnya
+        </button>
+      {% endif %}
+    </div>
+  </nav>
+{% endif %}

@@ -1,0 +1,24 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}QR {{ table }} — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-md">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">QR {{ table }}</h1>
+  <p class="mt-4 text-body text-slate-gray">Cetak dan tempel QR ini di meja pelanggan.</p>
+
+  <div class="mt-24 rounded-2xl border border-hairline bg-pure-white p-24 text-center">
+    <div class="mx-auto w-224 [&_svg]:h-full [&_svg]:w-full">{{ qr_svg|safe }}</div>
+    <p class="mt-16 break-all text-caption text-slate-gray">{{ menu_url }}</p>
+  </div>
+
+  <div class="mt-24 flex flex-wrap gap-16">
+    <button type="button" onclick="window.print()" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Cetak</button>
+    <form method="post" action="{% url 'tables:rotate_qr' table.pk %}"
+          onsubmit="return confirm('Ganti token QR? QR lama tidak akan berlaku lagi.');">
+      {% csrf_token %}
+      <button type="submit" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Ganti token QR</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

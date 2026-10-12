@@ -1,0 +1,67 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Kitchen Display — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Kitchen Display</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        {% if current_branch %}Cabang {{ current_branch.name }}{% else %}Pilih cabang{% endif %}
+      </p>
+    </div>
+    <button id="sound-toggle" type="button"
+            class="rounded-full border border-hairline bg-pure-white px-16 py-8 text-body-sm hover:border-powder-blue">
+      Aktifkan suara
+    </button>
+  </div>
+
+  <div id="kitchen-board" class="mt-24"
+       hx-get="{% url 'orders:kitchen_board' %}" hx-trigger="every 8s" hx-swap="innerHTML">
+    {% include "orders/kitchen/_board.html" %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Browser audio needs a user gesture; visual updates work regardless.
+  (function () {
+    let enabled = false;
+    let audioCtx = null;
+    const toggle = document.getElementById("sound-toggle");
+
+    toggle?.addEventListener("click", () => {
+      enabled = true;
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      audioCtx.resume();
+      toggle.textContent = "Suara aktif";
+      toggle.classList.add("bg-emerald-50", "text-forest");
+    });
+
+    function beep() {
+      if (!enabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.value = 880;
+      gain.gain.value = 0.08;
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.18);
+    }
+
+    // Count cards before swap vs after; new orders trigger one sound, not per-tick.
+    let knownIds = new Set(
+      Array.from(document.querySelectorAll("[id^='kitchen-']")).map((el) => el.id)
+    );
+    document.body.addEventListener("htmx:afterSwap", (event) => {
+      if (event.target.id !== "kitchen-board") return;
+      const ids = Array.from(event.target.querySelectorAll("[id^='kitchen-']"));
+      const hasNew = ids.some((el) => !knownIds.has(el.id));
+      knownIds = new Set(ids.map((el) => el.id));
+      if (hasNew) beep();
+    });
+  })();
+</script>
+{% endblock %}

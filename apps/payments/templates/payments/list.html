@@ -1,0 +1,89 @@
+{% extends "tenants/base_dashboard.html" %}
+{% load ui %}
+
+{% block title %}Pembayaran &amp; Refund — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Pembayaran &amp; Refund</h1>
+
+  <section class="mt-24">
+    <h2 class="text-heading-sm font-semibold">Pembayaran</h2>
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Order</th>
+            <th class="px-16 py-12 font-medium">Metode</th>
+            <th class="px-16 py-12 font-medium">Nominal</th>
+            <th class="px-16 py-12 font-medium">Status</th>
+            <th class="px-16 py-12 font-medium text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for payment in payments %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12"><a href="{% url 'orders:detail' payment.order_id %}" class="text-electric-cobalt hover:underline">{{ payment.order.order_number }}</a></td>
+              <td class="px-16 py-12 text-slate-gray">{{ payment.get_method_display }}</td>
+              <td class="px-16 py-12">Rp {{ payment.amount }}</td>
+              <td class="px-16 py-12">{% include "components/_badge.html" with label=payment.get_status_display tone=payment.status|payment_tone %}</td>
+              <td class="px-16 py-12 text-right">
+                {% if payment.status == 'PAID' and payment.refundable_amount > 0 %}
+                  <a href="{% url 'payments:refund_create' payment.pk %}" class="text-electric-cobalt hover:underline">Refund</a>
+                {% else %}—{% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="px-16 py-24 text-center text-slate-gray">Belum ada pembayaran.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mt-32">
+    <h2 class="text-heading-sm font-semibold">Refund</h2>
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Nomor</th>
+            <th class="px-16 py-12 font-medium">Order</th>
+            <th class="px-16 py-12 font-medium">Nominal</th>
+            <th class="px-16 py-12 font-medium">Status</th>
+            <th class="px-16 py-12 font-medium text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for refund in refunds %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12">{{ refund.refund_number }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ refund.payment.order.order_number }}</td>
+              <td class="px-16 py-12">Rp {{ refund.amount }}</td>
+              <td class="px-16 py-12">{% include "components/_badge.html" with label=refund.get_status_display tone=refund.status|refund_tone %}</td>
+              <td class="px-16 py-12 text-right">
+                <div class="flex justify-end gap-8">
+                  {% if refund.status == 'REQUESTED' %}
+                    <form method="post" action="{% url 'payments:refund_approve' refund.pk %}">
+                      {% csrf_token %}
+                      <button class="text-electric-cobalt hover:underline">Setujui</button>
+                    </form>
+                  {% endif %}
+                  {% if refund.status == 'APPROVED' or refund.status == 'PROCESSING' or refund.status == 'REQUESTED' %}
+                    <form method="post" action="{% url 'payments:refund_complete' refund.pk %}">
+                      {% csrf_token %}
+                      <button class="text-forest hover:underline">Selesaikan</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="px-16 py-24 text-center text-slate-gray">Belum ada refund.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{
+  "name": "portatap",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PortaTap frontend build (Tailwind CSS)",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --minify",
+    "watch:css": "tailwindcss -i ./static/css/input.css -o ./static/css/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  }
+}

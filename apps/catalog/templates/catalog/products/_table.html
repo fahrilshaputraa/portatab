@@ -1,0 +1,35 @@
+<div id="product-table">
+{% if products %}
+  <div class="overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <table class="w-full text-left text-body-sm">
+      <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+        <tr>
+          <th class="px-24 py-12 font-medium">Nama</th>
+          <th class="px-24 py-12 font-medium">Kategori</th>
+          <th class="px-24 py-12 font-medium">Varian</th>
+          <th class="px-24 py-12 font-medium">Status</th>
+          <th class="px-24 py-12 font-medium text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr class="border-b border-hairline last:border-0">
+            <td class="px-24 py-12 font-medium text-ink-charcoal">{{ product.name }}</td>
+            <td class="px-24 py-12 text-slate-gray">{{ product.category.name|default:"—" }}</td>
+            <td class="px-24 py-12 text-slate-gray">{{ product.variant_count }}</td>
+            <td class="px-24 py-12">
+              {% include "components/_badge.html" with label=product.get_status_display tone="success" %}
+            </td>
+            <td class="px-24 py-12 text-right">
+              <a href="{% url 'catalog_products:branch_pricing' product.pk %}" class="text-electric-cobalt hover:underline">Harga cabang</a>
+              <a href="{% url 'catalog_products:edit' product.pk %}" class="ml-16 text-electric-cobalt hover:underline">Ubah</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  {% include "components/_empty_state.html" with title="Belum ada produk" message="Tambahkan produk pertama untuk bisnis Anda." action_label="Tambah produk" action_href="/app/products/new/" %}
+{% endif %}
+</div>

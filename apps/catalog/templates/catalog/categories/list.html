@@ -1,0 +1,46 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Kategori — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Kategori</h1>
+      <p class="mt-4 text-body text-slate-gray">Kelompokkan produk pada QR menu.</p>
+    </div>
+    <a href="{% url 'catalog_categories:create' %}" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Tambah kategori</a>
+  </div>
+
+  <div class="mt-24">
+    {% if categories %}
+      <div class="overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+        <table class="w-full text-left text-body-sm">
+          <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+            <tr>
+              <th class="px-24 py-12 font-medium">Nama</th>
+              <th class="px-24 py-12 font-medium">Urutan</th>
+              <th class="px-24 py-12 font-medium">Aktif</th>
+              <th class="px-24 py-12 font-medium text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for category in categories %}
+              <tr class="border-b border-hairline last:border-0">
+                <td class="px-24 py-12 font-medium text-ink-charcoal">{{ category.name }}</td>
+                <td class="px-24 py-12 text-slate-gray">{{ category.sort_order }}</td>
+                <td class="px-24 py-12">{% if category.is_active %}Ya{% else %}Tidak{% endif %}</td>
+                <td class="px-24 py-12 text-right">
+                  <a href="{% url 'catalog_categories:edit' category.pk %}" class="text-electric-cobalt hover:underline">Ubah</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      {% include "components/_empty_state.html" with title="Belum ada kategori" message="Buat kategori untuk merapikan menu." action_label="Tambah kategori" action_href="/app/categories/new/" %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

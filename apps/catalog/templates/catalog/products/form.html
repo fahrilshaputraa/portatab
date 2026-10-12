@@ -1,0 +1,43 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}{% if product %}Ubah{% else %}Tambah{% endif %} produk — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-2xl">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">
+    {% if product %}Ubah produk{% else %}Tambah produk{% endif %}
+  </h1>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+
+    <fieldset class="mt-16 rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <legend class="px-8 text-body-sm font-semibold text-ink-charcoal">Varian</legend>
+      {{ formset.management_form }}
+      <div class="flex flex-col gap-16">
+        {% for variant_form in formset %}
+          <div class="grid grid-cols-1 gap-8 sm:grid-cols-4">
+            {{ variant_form.id }}
+            {% include "components/_field.html" with field=variant_form.name %}
+            {% include "components/_field.html" with field=variant_form.price_delta %}
+            {% include "components/_field.html" with field=variant_form.sort_order %}
+            <div class="flex items-end gap-8 pb-12 text-body-sm">
+              <label class="flex items-center gap-4">{{ variant_form.is_active }} Aktif</label>
+              {% if variant_form.instance.pk %}<label class="flex items-center gap-4">{{ variant_form.DELETE }} Hapus</label>{% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <div class="mt-8 flex gap-16">
+      <button type="submit" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Simpan</button>
+      <a href="{% url 'catalog_products:list' %}" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

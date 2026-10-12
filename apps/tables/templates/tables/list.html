@@ -1,0 +1,51 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Meja &amp; QR — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Meja &amp; QR</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        {% if current_branch %}Cabang {{ current_branch.name }}{% else %}Pilih cabang untuk mengelola meja{% endif %}
+      </p>
+    </div>
+    {% if current_branch %}
+      <a href="{% url 'tables:create' %}" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Tambah meja</a>
+    {% endif %}
+  </div>
+
+  <div class="mt-24">
+    {% if tables %}
+      <div class="overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+        <table class="w-full text-left text-body-sm">
+          <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+            <tr>
+              <th class="px-24 py-12 font-medium">Meja</th>
+              <th class="px-24 py-12 font-medium">Nama</th>
+              <th class="px-24 py-12 font-medium">Status</th>
+              <th class="px-24 py-12 font-medium text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for table in tables %}
+              <tr class="border-b border-hairline last:border-0">
+                <td class="px-24 py-12 font-medium text-ink-charcoal">{{ table.table_number }}</td>
+                <td class="px-24 py-12 text-slate-gray">{{ table.name|default:"—" }}</td>
+                <td class="px-24 py-12">{{ table.get_status_display }}</td>
+                <td class="px-24 py-12 text-right">
+                  <a href="{% url 'tables:qr' table.pk %}" class="text-electric-cobalt hover:underline">QR</a>
+                  <a href="{% url 'tables:edit' table.pk %}" class="ml-16 text-electric-cobalt hover:underline">Ubah</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      {% include "components/_empty_state.html" with title="Belum ada meja" message="Buat meja dan cetak QR untuk pelanggan." %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

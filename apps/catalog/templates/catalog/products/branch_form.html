@@ -1,0 +1,27 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Harga cabang — {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-xl">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">{{ product.name }}</h1>
+  <p class="mt-4 text-body text-slate-gray">Konfigurasi untuk cabang {{ current_branch.name }}</p>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+    <div class="mt-8 flex gap-16">
+      <button type="submit" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Simpan</button>
+      <a href="{% url 'catalog_products:list' %}" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Batal</a>
+    </div>
+  </form>
+
+  <p class="mt-24 text-caption text-steel-gray">
+    Stok saat ini: {{ branch_product.on_hand }} (direservasi {{ branch_product.reserved }},
+    tersedia {{ branch_product.available }}). Ubah stok lewat halaman Stok agar tercatat.
+  </p>
+</div>
+{% endblock %}

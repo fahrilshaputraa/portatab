@@ -1,0 +1,36 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Dashboard — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Dashboard</h1>
+  <p class="mt-4 text-body text-slate-gray">
+    {{ current_tenant.name }}{% if current_branch %} · {{ current_branch.name }}{% endif %}
+  </p>
+
+  {% if not current_branch %}
+    {% include "components/_empty_state.html" with title="Belum ada cabang aktif" message="Buat cabang terlebih dahulu untuk mulai menerima order." %}
+  {% else %}
+    <div class="mt-32 grid grid-cols-1 gap-16 sm:grid-cols-3">
+      <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+        <p class="text-body-sm text-slate-gray">Penjualan hari ini</p>
+        <p class="mt-4 text-heading-lg font-semibold text-electric-cobalt">Rp {{ summary.net_sales }}</p>
+      </div>
+      <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+        <p class="text-body-sm text-slate-gray">Order menunggu kasir</p>
+        <p class="mt-4 text-heading-lg font-semibold text-ink-charcoal">{{ pending_count }}</p>
+      </div>
+      <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+        <p class="text-body-sm text-slate-gray">Order di dapur</p>
+        <p class="mt-4 text-heading-lg font-semibold text-ink-charcoal">{{ kitchen_count }}</p>
+      </div>
+    </div>
+
+    <div class="mt-32 flex gap-16">
+      <a href="{% url 'orders:cashier' %}" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Buka Kasir</a>
+      <a href="{% url 'orders:kitchen' %}" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Buka Kitchen Display</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

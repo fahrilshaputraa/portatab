@@ -1,0 +1,80 @@
+{% load static %}<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}PortaTap{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="min-h-full bg-canvas-cream text-ink-charcoal antialiased">
+<div class="flex min-h-screen">
+  <aside class="hidden w-64 shrink-0 border-r border-hairline bg-pure-white lg:flex lg:flex-col">
+    <div class="flex h-16 items-center px-24 text-heading font-semibold text-ink-charcoal">PortaTap</div>
+    <nav class="flex-1 overflow-y-auto px-16 py-16 text-body-sm">
+      <p class="px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Ringkasan</p>
+      <a href="{% url 'tenants:dashboard' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Dashboard</a>
+
+      <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Operasional</p>
+      <a href="{% url 'orders:cashier' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Order &amp; Kasir</a>
+      <a href="{% url 'orders:kitchen' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Kitchen Display</a>
+      <a href="{% url 'payments:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Pembayaran &amp; Refund</a>
+
+      <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Bisnis</p>
+      <a href="{% url 'catalog_products:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Produk</a>
+      <a href="{% url 'catalog_categories:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Kategori</a>
+      <a href="{% url 'tables:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Meja &amp; QR</a>
+      <a href="{% url 'inventory:list' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Stok</a>
+
+      <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Laporan</p>
+      <a href="{% url 'reports:sales' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Laporan Penjualan</a>
+    </nav>
+  </aside>
+
+  <div class="flex min-w-0 flex-1 flex-col">
+    <header class="flex h-16 items-center justify-between border-b border-hairline bg-pure-white px-24">
+      {% if current_tenant %}
+        <form method="post" action="{% url 'tenants:switch_workspace' %}" class="flex items-center gap-8">
+          {% csrf_token %}
+          <select name="tenant" class="rounded-full border border-hairline bg-surface-ivory px-16 py-8 text-body-sm"
+                  onchange="this.form.submit()">
+            {% for tenant in request.user.memberships.all %}
+              {% if tenant.status == 'ACTIVE' %}
+                <option value="{{ tenant.tenant_id }}" {% if tenant.tenant_id == current_tenant.id %}selected{% endif %}>
+                  {{ tenant.tenant.name }}
+                </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          <select name="branch" class="rounded-full border border-hairline bg-surface-ivory px-16 py-8 text-body-sm"
+                  onchange="this.form.submit()">
+            {% for branch in accessible_branches %}
+              <option value="{{ branch.id }}" {% if current_branch and branch.id == current_branch.id %}selected{% endif %}>
+                {{ branch.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </form>
+      {% else %}<span></span>{% endif %}
+
+      <div class="flex items-center gap-16 text-body-sm">
+        <span class="text-slate-gray">{{ request.user.name }}</span>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="rounded-full border border-hairline px-16 py-8 hover:border-powder-blue">Keluar</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="min-w-0 flex-1 px-24 py-32">
+      {% include "partials/_messages.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+<script src="{% static 'js/app.js' %}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

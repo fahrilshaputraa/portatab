@@ -1,0 +1,70 @@
+<div id="report-region" class="flex flex-col gap-24">
+  <div class="grid grid-cols-1 gap-16 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Order selesai</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">{{ summary.order_count }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Penjualan kotor</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">Rp {{ summary.gross_sales }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Diskon</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">Rp {{ summary.discounts }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Penjualan bersih</p>
+      <p class="mt-4 text-heading font-semibold text-electric-cobalt">Rp {{ summary.net_sales }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Dibayar</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">Rp {{ summary.paid_amount }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Belum dibayar</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">Rp {{ summary.unpaid_amount }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Refund berhasil</p>
+      <p class="mt-4 text-heading font-semibold text-ink-charcoal">Rp {{ summary.refunded_amount }}</p>
+    </div>
+    <div class="rounded-2xl border border-hairline bg-surface-ivory p-24">
+      <p class="text-body-sm text-slate-gray">Bersih setelah refund</p>
+      <p class="mt-4 text-heading font-semibold text-electric-cobalt">Rp {{ summary.net_after_refund }}</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-24 lg:grid-cols-2">
+    <div class="rounded-2xl border border-hairline bg-pure-white p-24">
+      <h2 class="text-heading-sm font-semibold">Produk terlaris</h2>
+      <table class="mt-12 w-full text-left text-body-sm">
+        <tbody>
+          {% for row in top_products %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="py-8">{{ row.items__product_name_snapshot }}</td>
+              <td class="py-8 text-right text-slate-gray">{{ row.quantity }} terjual</td>
+            </tr>
+          {% empty %}
+            <tr><td class="py-8 text-slate-gray">Belum ada penjualan.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rounded-2xl border border-hairline bg-pure-white p-24">
+      <h2 class="text-heading-sm font-semibold">Metode pembayaran</h2>
+      <table class="mt-12 w-full text-left text-body-sm">
+        <tbody>
+          {% for row in methods %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="py-8">{{ row.payments__method|default:"—" }}</td>
+              <td class="py-8 text-right text-slate-gray">{{ row.orders }} order · Rp {{ row.total }}</td>
+            </tr>
+          {% empty %}
+            <tr><td class="py-8 text-slate-gray">Belum ada pembayaran.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Order &amp; Kasir — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Order &amp; Kasir</h1>
+      <p class="mt-4 text-body text-slate-gray">
+        {% if current_branch %}Cabang {{ current_branch.name }}{% else %}Pilih cabang untuk melihat order{% endif %}
+      </p>
+    </div>
+    <span class="text-caption text-steel-gray">Diperbarui otomatis tiap 10 detik</span>
+  </div>
+
+  <div id="cashier-list" class="mt-24"
+       hx-get="{% url 'orders:cashier' %}" hx-trigger="every 10s" hx-swap="innerHTML">
+    {% include "orders/cashier/_list.html" %}
+  </div>
+</div>
+{% endblock %}

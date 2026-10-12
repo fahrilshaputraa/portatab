@@ -1,0 +1,29 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Ajukan refund — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-xl">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Ajukan refund</h1>
+  <p class="mt-4 text-body text-slate-gray">
+    Order {{ payment.order.order_number }} · dibayar Rp {{ payment.amount }} ·
+    sisa yang dapat direfund Rp {{ payment.refundable_amount }}
+  </p>
+
+  <form method="post" class="mt-24 flex flex-col gap-16">
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}
+      {% include "components/_field.html" with field=field %}
+    {% endfor %}
+    <div class="mt-8 flex gap-16">
+      <button type="submit" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Ajukan refund</button>
+      <a href="{% url 'orders:detail' payment.order_id %}" class="rounded-full border border-hairline bg-pure-white px-24 py-12 text-body-sm font-medium hover:border-powder-blue">Batal</a>
+    </div>
+  </form>
+
+  <p class="mt-16 text-caption text-steel-gray">
+    Nominal di atas batas kasir memerlukan persetujuan manager.
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Produk — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <div class="flex flex-wrap items-center justify-between gap-16">
+    <div>
+      <h1 class="text-heading-lg font-semibold text-ink-charcoal">Produk</h1>
+      <p class="mt-4 text-body text-slate-gray">Kelola menu dan harga per cabang.</p>
+    </div>
+    <a href="{% url 'catalog_products:create' %}" class="rounded-full bg-electric-cobalt px-24 py-12 text-body-sm font-medium text-pure-white hover:bg-deep-cobalt">Tambah produk</a>
+  </div>
+
+  <div class="mt-24">
+    <input type="search" name="q" value="{{ query }}" placeholder="Cari produk atau kategori…"
+           hx-get="{% url 'catalog_products:list' %}"
+           hx-target="#product-table"
+           hx-swap="outerHTML"
+           hx-trigger="keyup changed delay:300ms, search"
+           class="w-full max-w-md rounded-2xl border border-hairline bg-pure-white px-16 py-12 text-body">
+  </div>
+
+  <div class="mt-16">
+    {% include "catalog/products/_table.html" %}
+  </div>
+</div>
+{% endblock %}

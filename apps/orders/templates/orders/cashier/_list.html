@@ -1,0 +1,9 @@
+{% if orders %}
+  <div class="flex flex-col gap-16">
+    {% for order in orders %}
+      {% include "orders/_cashier_row.html" with order=order %}
+    {% endfor %}
+  </div>
+{% else %}
+  {% include "components/_empty_state.html" with title="Belum ada order aktif" message="Order dari QR pelanggan akan muncul di sini." %}
+{% endif %}

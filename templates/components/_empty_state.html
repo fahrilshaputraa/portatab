@@ -1,0 +1,10 @@
+{% comment %}
+Empty state. Params: title, message (optional), action_label + action_href (optional)
+{% endcomment %}
+<div class="flex flex-col items-center justify-center gap-8 rounded-2xl border border-dashed border-hairline bg-surface-ivory px-24 py-48 text-center">
+  <p class="text-heading-sm font-semibold text-ink-charcoal">{{ title }}</p>
+  {% if message %}<p class="max-w-prose text-body-sm text-slate-gray">{{ message }}</p>{% endif %}
+  {% if action_label and action_href %}
+    {% include "components/_button.html" with label=action_label href=action_href variant="ghost" %}
+  {% endif %}
+</div>

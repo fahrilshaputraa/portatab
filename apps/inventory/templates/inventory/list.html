@@ -1,0 +1,47 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Stok — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Stok</h1>
+  <p class="mt-4 text-body text-slate-gray">
+    {% if current_branch %}Stok produk cabang {{ current_branch.name }}{% else %}Pilih cabang untuk melihat stok{% endif %}
+  </p>
+
+  <div class="mt-24">
+    {% if products %}
+      <div class="overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+        <table class="w-full text-left text-body-sm">
+          <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+            <tr>
+              <th class="px-24 py-12 font-medium">Produk</th>
+              <th class="px-24 py-12 font-medium">On hand</th>
+              <th class="px-24 py-12 font-medium">Reserved</th>
+              <th class="px-24 py-12 font-medium">Tersedia</th>
+              <th class="px-24 py-12 font-medium">Lacak stok</th>
+              <th class="px-24 py-12 font-medium text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+              <tr class="border-b border-hairline last:border-0">
+                <td class="px-24 py-12 font-medium text-ink-charcoal">{{ product.product.name }}</td>
+                <td class="px-24 py-12 text-slate-gray">{{ product.on_hand }}</td>
+                <td class="px-24 py-12 text-slate-gray">{{ product.reserved }}</td>
+                <td class="px-24 py-12 {% if product.track_stock and product.available <= 0 %}text-red-600 font-medium{% else %}text-slate-gray{% endif %}">{{ product.available }}</td>
+                <td class="px-24 py-12 text-slate-gray">{% if product.track_stock %}Ya{% else %}Tidak{% endif %}</td>
+                <td class="px-24 py-12 text-right">
+                  <a href="{% url 'inventory:adjust' product.pk %}" class="text-electric-cobalt hover:underline">Koreksi stok</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      {% include "components/_empty_state.html" with title="Belum ada data stok" message="Konfigurasikan produk pada cabang terlebih dahulu." %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
