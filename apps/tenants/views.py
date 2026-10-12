@@ -10,6 +10,7 @@ from apps.accounts.models import Membership, MembershipStatus
 from apps.accounts.roles import Perm
 from apps.orders.selectors import kitchen_queue, pending_orders
 from apps.reports.selectors import sales_summary
+from apps.subscriptions.services import SubscriptionError, assert_can_add_branch
 from apps.tenants.forms import BranchForm, BusinessProfileForm, OperationalPolicyForm
 from apps.tenants.models import Branch
 from apps.tenants.permissions import require_permission, require_tenant
@@ -144,6 +145,16 @@ def branch_form(request, pk=None):
     if request.method == "POST":
         form = BranchForm(request.POST, instance=branch)
         if form.is_valid():
+            if branch is None:
+                try:
+                    assert_can_add_branch(request.tenant)
+                except SubscriptionError as exc:
+                    messages.error(request, str(exc))
+                    return render(
+                        request,
+                        "tenants/settings/branch_form.html",
+                        {"form": form, "branch": branch},
+                    )
             obj = form.save(commit=False)
             obj.tenant = request.tenant
             obj.save()

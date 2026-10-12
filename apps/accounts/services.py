@@ -22,6 +22,7 @@ from apps.accounts.models import (
     RolePermission,
 )
 from apps.accounts.roles import ALL_PERMISSIONS, SYSTEM_ROLES
+from apps.subscriptions.services import assert_can_add_account
 
 User = get_user_model()
 
@@ -119,11 +120,16 @@ def invite_staff(*, tenant, email: str, role_code: str, branches=None, actor=Non
     user = User.objects.filter(email=email).first()
 
     if user is not None:
+        # Re-inviting an existing member only changes their access, so it does
+        # not consume a new account slot.
+        if not Membership.objects.filter(tenant=tenant, user=user).exists():
+            assert_can_add_account(tenant)
         membership = create_membership(
             tenant=tenant, user=user, role_code=role_code, branches=branches
         )
         return membership, None
 
+    assert_can_add_account(tenant)
     invitation, _ = Invitation.objects.update_or_create(
         tenant=tenant,
         email=email,
@@ -169,6 +175,9 @@ def accept_invitation(*, invitation, name: str = "", password: str | None = None
         user = User.objects.create_user(
             email=email, password=password, name=name.strip() or email.split("@")[0]
         )
+
+    if not Membership.objects.filter(tenant=invitation.tenant, user=user).exists():
+        assert_can_add_account(invitation.tenant)
 
     membership = create_membership(
         tenant=invitation.tenant,

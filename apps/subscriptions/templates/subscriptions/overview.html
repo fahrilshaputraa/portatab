@@ -1,0 +1,113 @@
+{% extends "tenants/base_dashboard.html" %}
+
+{% block title %}Langganan — PortaTap{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-page">
+  <h1 class="text-heading-lg font-semibold text-ink-charcoal">Langganan</h1>
+  <p class="mt-4 text-body text-slate-gray">
+    Paket menentukan batas cabang, akun, dan fitur. Terpisah dari status operasional bisnis.
+  </p>
+
+  {# ------------------------------------------------------------ Status --- #}
+  <section class="mt-32 rounded-2xl border border-hairline bg-pure-white p-24">
+    {% if subscription %}
+      <div class="flex flex-wrap items-center justify-between gap-16">
+        <div>
+          <p class="text-body-sm text-slate-gray">Paket saat ini</p>
+          <p class="text-heading font-semibold text-ink-charcoal">{{ subscription.plan.name }}</p>
+          <p class="mt-4 text-caption text-slate-gray">
+            {{ subscription.get_status_display }}
+            {% if subscription.current_period_end %}
+              · periode sampai {{ subscription.current_period_end|date:"j F Y" }}
+            {% endif %}
+            {% if subscription.trial_ends_at %}
+              · uji coba berakhir {{ subscription.trial_ends_at|date:"j F Y H:i" }}
+            {% endif %}
+          </p>
+        </div>
+        <a href="{% url 'website:landing' %}#harga" class="btn btn-ghost">Lihat perbandingan paket</a>
+      </div>
+    {% else %}
+      <p class="text-body text-slate-gray">
+        Belum ada langganan aktif. Pilih paket di bawah untuk mulai berlangganan.
+      </p>
+    {% endif %}
+
+    <div class="mt-24 grid grid-cols-1 gap-16 sm:grid-cols-2">
+      <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+        <p class="text-caption text-slate-gray">Cabang terpakai</p>
+        <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">
+          {{ usage.branches.0 }} / {{ usage.branches.1 }}
+        </p>
+        {% if usage.branches.0 >= usage.branches.1 %}
+          <p class="mt-4 text-caption text-red-600">Batas paket tercapai.</p>
+        {% endif %}
+      </div>
+      <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
+        <p class="text-caption text-slate-gray">Akun terpakai</p>
+        <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">
+          {{ usage.accounts.0 }} / {{ usage.accounts.1 }}
+        </p>
+        {% if usage.accounts.0 >= usage.accounts.1 %}
+          <p class="mt-4 text-caption text-red-600">Batas paket tercapai.</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {# --------------------------------------------------- Ubah paket --- #}
+  <section class="mt-32 rounded-2xl border border-hairline bg-pure-white p-24">
+    <h2 class="text-heading-sm font-semibold text-ink-charcoal">
+      {% if subscription %}Ubah paket{% else %}Mulai berlangganan{% endif %}
+    </h2>
+    <form method="post" class="mt-16 flex max-w-xl flex-col gap-16">
+      {% csrf_token %}
+      {% include "partials/_form_errors.html" %}
+      {% for field in form %}
+        {% include "components/_field.html" with field=field %}
+      {% endfor %}
+      <div class="mt-8">
+        <button type="submit" class="btn btn-primary">Aktifkan paket</button>
+      </div>
+    </form>
+    <p class="mt-16 text-caption text-steel-gray">
+      Invoice diterbitkan dengan snapshot harga dan periode, jadi perubahan harga paket
+      di kemudian hari tidak mengubah tagihan lama.
+    </p>
+  </section>
+
+  {# ------------------------------------------------------------ Invoice --- #}
+  <section class="mt-32">
+    <h2 class="text-heading-sm font-semibold text-ink-charcoal">Invoice</h2>
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <table class="w-full text-left text-body-sm">
+        <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
+          <tr>
+            <th class="px-16 py-12 font-medium">Nomor</th>
+            <th class="px-16 py-12 font-medium">Paket</th>
+            <th class="px-16 py-12 font-medium">Nilai normal</th>
+            <th class="px-16 py-12 font-medium">Diskon</th>
+            <th class="px-16 py-12 font-medium">Total</th>
+            <th class="px-16 py-12 font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices %}
+            <tr class="border-b border-hairline last:border-0">
+              <td class="px-16 py-12 font-medium text-ink-charcoal">{{ invoice.invoice_number }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ invoice.subscription.plan.name }}</td>
+              <td class="px-16 py-12 text-slate-gray">Rp {{ invoice.normal_amount|floatformat:"0g" }}</td>
+              <td class="px-16 py-12 text-slate-gray">Rp {{ invoice.discount_amount|floatformat:"0g" }}</td>
+              <td class="px-16 py-12 font-medium text-ink-charcoal">Rp {{ invoice.total_amount|floatformat:"0g" }}</td>
+              <td class="px-16 py-12 text-slate-gray">{{ invoice.get_status_display }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="px-16 py-24 text-center text-slate-gray">Belum ada invoice.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

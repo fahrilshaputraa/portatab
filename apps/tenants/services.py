@@ -9,6 +9,7 @@ from django.utils.text import slugify
 
 from apps.accounts.roles import RoleCode
 from apps.accounts.services import create_membership, seed_system_roles
+from apps.subscriptions.services import start_trial
 from apps.tenants.models import AuditLog, Branch, Tenant, TenantSettings
 
 
@@ -73,6 +74,7 @@ def register_business(*, owner, business_name: str, branch_name: str, **tenant_f
     seed_system_roles(tenant)
     branch = create_branch(tenant=tenant, name=branch_name, code="MAIN")
     create_membership(tenant=tenant, user=owner, role_code=RoleCode.OWNER, branches=[branch])
+    start_trial(tenant=tenant)
     record_audit(action="tenant.created", tenant=tenant, user=owner, entity=tenant)
     return tenant, branch
 

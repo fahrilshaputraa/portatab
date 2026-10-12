@@ -103,6 +103,11 @@ def test_setting_round_trip(tenant):
 
 @pytest.mark.django_db
 def test_owner_can_create_branch(client, owner, tenant):
+    # The entry plan allows a single branch, so move to a multi-branch plan first.
+    from apps.subscriptions.models import Plan
+    from apps.subscriptions.services import subscribe
+
+    subscribe(tenant=tenant, plan=Plan.objects.get(code="GROWTH"))
     client.force_login(owner)
 
     response = client.post(

@@ -20,8 +20,12 @@ User = get_user_model()
 
 @pytest.fixture
 def tenant(db):
+    """A tenant set up the way onboarding does it: roles seeded and a plan active."""
+    from apps.subscriptions.services import start_trial
+
     tenant = Tenant.objects.create(name="Kopi Senja", slug="kopi-senja")
     seed_system_roles(tenant)
+    start_trial(tenant=tenant)
     return tenant
 
 
@@ -77,8 +81,11 @@ def table(branch):
 
 @pytest.fixture
 def other_tenant(db):
+    from apps.subscriptions.services import start_trial
+
     tenant = Tenant.objects.create(name="Bakso Lain", slug="bakso-lain")
     seed_system_roles(tenant)
+    start_trial(tenant=tenant)
     return tenant
 
 

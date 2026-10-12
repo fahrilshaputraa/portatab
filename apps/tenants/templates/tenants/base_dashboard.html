@@ -37,6 +37,7 @@
           <span class="rounded-full bg-electric-cobalt px-8 py-2 text-caption font-medium text-pure-white">{{ unread_notifications }}</span>
         {% endif %}
       </a>
+      <a href="{% url 'subscriptions:overview' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Langganan</a>
 
       {% if is_platform_admin %}
         <p class="mt-16 px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Platform</p>
