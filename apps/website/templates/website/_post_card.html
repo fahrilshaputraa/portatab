@@ -1,7 +1,7 @@
 {% comment %}One blog/news teaser. Params: post{% endcomment %}
-<article class="flex flex-col overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+<article class="flex flex-col overflow-hidden rounded-2xl border border-hairline bg-panel">
   {% if post.cover_image_url %}
-    <img src="{{ post.cover_image_url }}" alt="" class="h-160 w-full object-cover" loading="lazy">
+    <img src="{{ post.cover_image_url }}" alt="" class="h-[160px] w-full object-cover" loading="lazy">
   {% endif %}
   <div class="flex flex-1 flex-col gap-8 p-24">
     <p class="text-caption text-slate-gray">

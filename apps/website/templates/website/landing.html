@@ -1,378 +1,300 @@
 {% extends "website/_site_base.html" %}
+{% load static %}
 
-{% block title %}PortaTap — Pemesanan QR untuk bisnis makanan &amp; minuman{% endblock %}
+{% block title %}PortaTap — Pesanan QR untuk bisnis makanan &amp; minuman{% endblock %}
 
 {% block content %}
 {% url 'accounts:register' as register_url %}
 
 {# ------------------------------------------------------------------ Hero --- #}
-<section class="bg-gradient-to-b from-canvas-cream via-[#eaf3fd] to-[#d5ecff]">
-  <div class="mx-auto grid max-w-page items-center gap-64 px-24 py-88 lg:grid-cols-2">
-    <div class="flex flex-col items-start">
-      <h1 class="text-balance text-heading-xl font-semibold leading-[1.08] tracking-tight text-ink-charcoal sm:text-display lg:text-display-lg">
-        Pelanggan memesan dari meja, kedai Anda langsung tahu.
+<section class="relative overflow-hidden">
+  <div class="wash wash-violet" aria-hidden="true"></div>
+
+  <div class="relative z-10 mx-auto max-w-page px-24 pb-88 pt-88">
+    <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+      <p class="label reveal" style="--i: 0">Untuk kedai kopi, warung, dan restoran</p>
+      <h1 class="reveal mt-16 text-balance text-heading-xl font-semibold sm:text-display" style="--i: 1">
+        Pesanan dari meja, langsung ke kasir.
       </h1>
-      <p class="mt-24 max-w-[46ch] text-pretty text-subheading leading-relaxed text-ink-charcoal">
-        PortaTap menyatukan QR menu, dashboard kasir, layar dapur, pembayaran, dan stok
-        dalam satu alur. Dibuat untuk kedai kopi, warung modern, dan restoran kecil
-        yang ingin tumbuh ke banyak cabang.
+      <p class="reveal mt-20 max-w-[52ch] text-pretty text-subheading text-slate-gray" style="--i: 2">
+        PortaTap menyatukan QR menu, kasir, layar dapur, pembayaran, dan stok dalam satu alur.
       </p>
-      <div class="mt-32 flex flex-wrap items-center gap-16">
+      <div class="reveal mt-32" style="--i: 3">
         {% include "components/_button.html" with label="Mulai gratis 14 hari" href=register_url variant="primary" size="lg" %}
-        {% include "components/_button.html" with label="Lihat cara kerjanya" href="#cara-kerja" variant="ghost" size="lg" %}
       </div>
-      <p class="mt-16 text-caption text-slate-gray">
-        Tanpa kartu kredit. Anda bisa menyiapkan menu dan meja dalam satu sore.
-      </p>
     </div>
 
-    {# A real slice of the product: this is the customer menu, not a mockup. #}
-    <div class="mx-auto w-full max-w-[420px]">
-      <div class="overflow-hidden rounded-3xl border border-hairline bg-pure-white shadow-lg">
-        <div class="flex items-center justify-between border-b border-hairline px-24 py-16">
-          <div>
-            <p class="text-caption text-slate-gray">Meja A1</p>
-            <p class="text-body-sm font-semibold text-ink-charcoal">Kopi Senja</p>
-          </div>
-          <span class="rounded-full bg-lavender-mist px-12 py-6 text-caption font-medium text-vivid-violet">QR menu</span>
-        </div>
-        <div class="flex flex-col divide-y divide-hairline">
-          <div class="flex items-center justify-between gap-16 px-24 py-16">
-            <div>
-              <p class="text-body-sm font-medium text-ink-charcoal">Kopi Susu</p>
-              <p class="text-caption text-slate-gray">Espresso, susu segar, gula aren</p>
-            </div>
-            <div class="flex shrink-0 items-center gap-12">
-              <span class="text-body-sm font-semibold text-electric-cobalt">Rp 18.000</span>
-              <span class="btn btn-primary btn-sm" aria-hidden="true">Tambah</span>
-            </div>
-          </div>
-          <div class="flex items-center justify-between gap-16 px-24 py-16">
-            <div>
-              <p class="text-body-sm font-medium text-ink-charcoal">Matcha Latte</p>
-              <p class="text-caption text-slate-gray">Matcha upacara, susu oat</p>
-            </div>
-            <div class="flex shrink-0 items-center gap-12">
-              <span class="text-body-sm font-semibold text-electric-cobalt">Rp 22.000</span>
-              <span class="btn btn-primary btn-sm" aria-hidden="true">Tambah</span>
-            </div>
-          </div>
-        </div>
-        <div class="flex items-center justify-between border-t border-hairline bg-surface-ivory px-24 py-16">
-          <span class="text-body-sm text-slate-gray">2 item · Rp 36.000</span>
-          <span class="btn btn-dark btn-sm" aria-hidden="true">Checkout</span>
-        </div>
-      </div>
-      <p class="mt-12 text-center text-caption text-steel-gray">
-        Tampilan QR menu yang dilihat pelanggan Anda.
-      </p>
-    </div>
-  </div>
-</section>
+    {# Honest proof: facts about the product, not borrowed logos. #}
+    <ul class="reveal mt-40 flex flex-wrap items-center justify-center gap-x-32 gap-y-12 text-body-sm text-slate-gray" style="--i: 4">
+      <li>Uji coba 14 hari, tanpa kartu kredit</li>
+      <li>Data tiap bisnis terpisah</li>
+      <li>Pembayaran tunai dan digital</li>
+    </ul>
 
-{# ------------------------------------------------------------- Showcase --- #}
-<section class="border-b border-hairline bg-pure-white">
-  <div class="mx-auto max-w-page px-24 py-88">
-    <div class="max-w-prose">
-      <h2 class="text-balance text-heading-lg font-semibold leading-tight text-ink-charcoal">
-        Sisi operasional, dari kasir sampai laporan
-      </h2>
-      <p class="mt-16 text-body text-pretty text-slate-gray">
-        Pelanggan memesan dari meja; tim Anda bekerja dari tiga layar ini. Cocok untuk
-        kedai kopi, warung modern, dan restoran kecil dengan satu sampai sepuluh cabang.
-      </p>
-    </div>
-
-    <div class="mt-48">
-      <input id="showcase-cashier" type="radio" name="showcase" class="peer/cashier sr-only" checked>
-      <input id="showcase-kitchen" type="radio" name="showcase" class="peer/kitchen sr-only">
-      <input id="showcase-report" type="radio" name="showcase" class="peer/report sr-only">
-
-      <div class="flex flex-wrap gap-8">
-        <label for="showcase-cashier" class="cursor-pointer rounded-full px-16 py-8 text-body-sm font-medium text-slate-gray transition-colors peer-checked/cashier:bg-surface-ivory peer-checked/cashier:text-ink-charcoal peer-focus-visible/cashier:outline peer-focus-visible/cashier:outline-2 peer-focus-visible/cashier:outline-offset-2 peer-focus-visible/cashier:outline-electric-cobalt">Kasir</label>
-        <label for="showcase-kitchen" class="cursor-pointer rounded-full px-16 py-8 text-body-sm font-medium text-slate-gray transition-colors peer-checked/kitchen:bg-surface-ivory peer-checked/kitchen:text-ink-charcoal peer-focus-visible/kitchen:outline peer-focus-visible/kitchen:outline-2 peer-focus-visible/kitchen:outline-offset-2 peer-focus-visible/kitchen:outline-electric-cobalt">Dapur</label>
-        <label for="showcase-report" class="cursor-pointer rounded-full px-16 py-8 text-body-sm font-medium text-slate-gray transition-colors peer-checked/report:bg-surface-ivory peer-checked/report:text-ink-charcoal peer-focus-visible/report:outline peer-focus-visible/report:outline-2 peer-focus-visible/report:outline-offset-2 peer-focus-visible/report:outline-electric-cobalt">Laporan</label>
-      </div>
-
-      {# Panel: cashier #}
-      <div class="mt-32 hidden peer-checked/cashier:block">
-        <div class="device">
+    {# The product itself: a real capture of the running app, not a mock-up. #}
+    <div class="reveal mt-48" style="--i: 5">
+      <div class="mx-auto max-w-5xl">
+        <div class="device shadow-lg">
           <div class="device-bar">
             <span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span>
             <span class="ml-8 text-caption text-slate-gray">Order &amp; Kasir · Cabang Pusat</span>
           </div>
-          <div class="device-body flex flex-col gap-12">
-            <div class="rounded-2xl border border-hairline p-16">
-              <div class="flex flex-wrap items-start justify-between gap-8">
-                <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-260112-0007</p>
-                <div class="flex gap-8">
-                  {% include "components/_badge.html" with label="Terlambat" tone="danger" %}
-                  {% include "components/_badge.html" with label="Menunggu kasir" tone="warning" %}
-                  {% include "components/_badge.html" with label="Belum dibayar" tone="warning" %}
-                </div>
-              </div>
-              <p class="mt-8 text-caption text-slate-gray">2× Kopi Susu · 1× Matcha Latte · Meja A1</p>
-              <div class="mt-12 flex flex-wrap items-center gap-8">
-                <span class="btn btn-primary btn-sm" aria-hidden="true">Terima</span>
-                <span class="btn btn-danger btn-sm" aria-hidden="true">Tolak</span>
-                <span class="ml-auto text-body-sm font-semibold text-ink-charcoal">Rp 61.000</span>
-              </div>
-            </div>
-            <div class="rounded-2xl border border-hairline p-16">
-              <div class="flex flex-wrap items-start justify-between gap-8">
-                <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-260112-0006</p>
-                <div class="flex gap-8">
-                  {% include "components/_badge.html" with label="Siap" tone="success" %}
-                  {% include "components/_badge.html" with label="Dibayar" tone="success" %}
-                </div>
-              </div>
-              <p class="mt-8 text-caption text-slate-gray">1× Americano · Meja B1</p>
-              <div class="mt-12 flex items-center gap-8">
-                <span class="btn btn-primary btn-sm" aria-hidden="true">Selesai</span>
-                <span class="ml-auto text-body-sm font-semibold text-ink-charcoal">Rp 15.000</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# Panel: kitchen #}
-      <div class="mt-32 hidden peer-checked/kitchen:block">
-        <div class="device">
-          <div class="device-bar">
-            <span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span>
-            <span class="ml-8 text-caption text-slate-gray">Kitchen Display</span>
-          </div>
-          <div class="device-body grid gap-12 sm:grid-cols-2">
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <div class="flex items-start justify-between gap-8">
-                <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-260112-0006</p>
-                {% include "components/_badge.html" with label="Diproses" tone="info" %}
-              </div>
-              <ul class="mt-8 flex flex-col gap-4 text-body-sm text-ink-charcoal">
-                <li><span class="font-medium">1×</span> Americano</li>
-                <li><span class="font-medium">2×</span> Kopi Susu <span class="text-caption text-slate-gray">— tanpa gula</span></li>
-              </ul>
-              <div class="mt-12">
-                <span class="btn btn-primary btn-sm" aria-hidden="true">Tandai siap</span>
-              </div>
-            </div>
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <div class="flex items-start justify-between gap-8">
-                <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-260112-0008</p>
-                {% include "components/_badge.html" with label="Diterima" tone="info" %}
-              </div>
-              <ul class="mt-8 flex flex-col gap-4 text-body-sm text-ink-charcoal">
-                <li><span class="font-medium">3×</span> Matcha Latte</li>
-              </ul>
-              <p class="mt-8 rounded-lg bg-lavender-mist px-12 py-8 text-caption text-ink-charcoal">
-                Catatan: satu tanpa es
-              </p>
-              <div class="mt-12">
-                <span class="btn btn-primary btn-sm" aria-hidden="true">Mulai proses</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {# Panel: reports #}
-      <div class="mt-32 hidden peer-checked/report:block">
-        <div class="device">
-          <div class="device-bar">
-            <span class="device-dot"></span><span class="device-dot"></span><span class="device-dot"></span>
-            <span class="ml-8 text-caption text-slate-gray">Laporan Penjualan · Hari ini</span>
-          </div>
-          <div class="device-body grid grid-cols-2 gap-12 lg:grid-cols-4">
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <p class="text-caption text-slate-gray">Order selesai</p>
-              <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">128</p>
-            </div>
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <p class="text-caption text-slate-gray">Penjualan bersih</p>
-              <p class="mt-4 text-heading-sm font-semibold tabular-nums text-electric-cobalt">2.480.000</p>
-            </div>
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <p class="text-caption text-slate-gray">Dibayar</p>
-              <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">2.310.000</p>
-            </div>
-            <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-              <p class="text-caption text-slate-gray">Refund</p>
-              <p class="mt-4 text-heading-sm font-semibold tabular-nums text-ink-charcoal">36.000</p>
-            </div>
-          </div>
+          <img src="{% static 'img/app-kasir.png' %}" width="1440" height="1000" loading="eager"
+               alt="Layar Order &amp; Kasir PortaTap: daftar order beserta status keterlambatan dan pembayaran, tombol terima dan tolak dengan alasan, serta penyelesaian order."
+               class="block w-full">
         </div>
       </div>
     </div>
   </div>
 </section>
 
-{# --------------------------------------------------------------- Masalah --- #}
-<section class="border-y border-hairline bg-surface-ivory">
-  <div class="mx-auto grid max-w-page gap-48 px-24 py-88 lg:grid-cols-[1fr_1.1fr]">
-    <div>
-      <h2 class="text-balance text-heading-lg font-semibold leading-tight text-ink-charcoal">
-        Yang biasanya goyah saat kedai mulai ramai
-      </h2>
-      <p class="mt-16 max-w-prose text-body text-slate-gray">
-        Bukan karena timnya kurang rapi — hanya saja pesanan, uang, dan stok dicatat
-        di tempat yang berbeda-beda.
+{# ------------------------------------------------------- Tiga layar --------- #}
+<section id="produk" class="scroll-mt-88 border-t border-hairline bg-panel">
+  <div class="mx-auto max-w-page px-24 py-88">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="reveal text-balance text-heading-lg font-semibold">Dari pelanggan sampai dapur</h2>
+      <p class="reveal mt-16 text-body text-slate-gray" style="--i: 1">
+        Pelanggan memesan dari meja. Tim Anda bekerja dari tiga layar ini.
       </p>
     </div>
-    <ul class="flex flex-col divide-y divide-hairline border-t border-hairline">
-      {% for problem in problems %}
-        <li class="flex gap-16 py-16 text-body text-ink-charcoal">
-          <span class="mt-8 block h-2 w-2 shrink-0 rounded-full bg-electric-cobalt" aria-hidden="true"></span>
-          <span class="text-pretty">{{ problem }}</span>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</section>
 
-{# --------------------------------------------------------------- Produk --- #}
-<section id="produk" class="mx-auto max-w-page scroll-mt-88 px-24 py-88">
-  <h2 class="max-w-prose text-balance text-heading-lg font-semibold leading-tight text-ink-charcoal">
-    Satu alur, dari meja sampai laporan
-  </h2>
-  <p class="mt-16 max-w-prose text-body text-slate-gray">
-    Setiap bagian mencatat transaksinya sendiri, jadi order, pembayaran, refund, dan
-    stok tidak pernah tercampur.
-  </p>
-
-  <div class="mt-48 grid grid-cols-1 gap-24 md:grid-cols-2 lg:grid-cols-3">
-    {% for feature in features %}
-      <article class="{% if forloop.first %}md:col-span-2{% endif %} flex flex-col gap-12 rounded-3xl border border-hairline bg-pure-white p-32 shadow-subtle">
-        <h3 class="{% if forloop.first %}text-heading-lg{% else %}text-heading-sm{% endif %} font-semibold leading-tight text-ink-charcoal">
-          {{ feature.title }}
-        </h3>
-        <p class="{% if forloop.first %}max-w-prose text-subheading{% else %}text-body-sm{% endif %} text-pretty text-slate-gray">
-          {{ feature.body }}
+    <div class="mt-48 grid grid-cols-1 gap-24 md:grid-cols-3">
+      {# Preview panels: the layout of each screen, drawn in the page itself. #}
+      <article class="reveal lift rounded-3xl border border-hairline bg-tint-sky p-20" style="--i: 0">
+        <div class="rounded-2xl border border-hairline bg-panel p-16">
+          <p class="text-caption text-slate-gray">Meja A1</p>
+          <p class="text-body-sm font-semibold text-ink-charcoal">Kopi Senja</p>
+          <div class="mt-12 flex flex-col gap-8">
+            <div class="flex items-center justify-between gap-8 text-body-sm">
+              <span class="text-ink-charcoal">Kopi Susu</span>
+              <span class="font-semibold text-electric-cobalt">18.000</span>
+            </div>
+            <div class="flex items-center justify-between gap-8 text-body-sm">
+              <span class="text-ink-charcoal">Matcha Latte</span>
+              <span class="font-semibold text-electric-cobalt">22.000</span>
+            </div>
+          </div>
+          <div class="btn btn-primary btn-sm mt-12 w-full">Tambah ke keranjang</div>
+        </div>
+        <h3 class="mt-20 text-body font-semibold text-ink-charcoal">QR menu pelanggan</h3>
+        <p class="mt-4 text-body-sm text-slate-gray">
+          Satu QR per meja. Pelanggan memilih, checkout, lalu melacak statusnya.
         </p>
       </article>
-    {% endfor %}
-  </div>
-</section>
 
-{# ----------------------------------------------------------- Cara kerja --- #}
-<section id="cara-kerja" class="scroll-mt-88 bg-lavender-mist">
-  <div class="mx-auto max-w-page px-24 py-88">
-    <h2 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">Mulai dalam tiga langkah</h2>
-    <ol class="mt-48 grid grid-cols-1 gap-32 md:grid-cols-3">
-      {% for title, body in steps %}
-        <li class="flex flex-col gap-12 border-t border-powder-blue pt-24">
-          <h3 class="text-heading-sm font-semibold text-ink-charcoal">{{ title }}</h3>
-          <p class="text-body-sm text-pretty text-slate-gray">{{ body }}</p>
-        </li>
-      {% endfor %}
-    </ol>
-  </div>
-</section>
-
-{# ---------------------------------------------------------------- Harga --- #}
-<section id="harga" class="mx-auto max-w-page scroll-mt-88 px-24 py-88">
-  <h2 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">Harga sederhana</h2>
-  <p class="mt-16 max-w-prose text-body text-slate-gray">
-    Berlangganan per bisnis, bukan per akun staf. Semua paket termasuk uji coba 14 hari.
-  </p>
-
-  {% if plans %}
-    <div class="mt-48 grid grid-cols-1 gap-24 md:grid-cols-3">
-      {% for plan in plans %}
-        <div class="flex flex-col gap-16 rounded-3xl border p-32
-                    {% if forloop.counter == 2 %}border-electric-cobalt bg-pure-white shadow-lg{% else %}border-hairline bg-surface-ivory{% endif %}">
-          <div>
-            <p class="text-heading-sm font-semibold text-ink-charcoal">{{ plan.name }}</p>
-            <p class="mt-8 text-heading-lg font-semibold tabular-nums text-electric-cobalt">
-              Rp {{ plan.monthly_price|floatformat:"0g" }}
-              <span class="text-body-sm font-normal text-slate-gray">/bulan</span>
-            </p>
+      <article class="reveal lift rounded-3xl border border-hairline bg-tint-peach p-20" style="--i: 1">
+        <div class="rounded-2xl border border-hairline bg-panel p-16">
+          <div class="flex items-center justify-between">
+            <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-0007</p>
+            {% include "components/_badge.html" with label="Menunggu" tone="warning" %}
           </div>
-          <ul class="flex flex-col gap-8 text-body-sm text-slate-gray">
-            <li>{{ plan.max_branches }} cabang</li>
-            <li>{{ plan.max_accounts }} akun owner &amp; staf</li>
-            <li>QR menu, kasir, dan layar dapur</li>
-          </ul>
-          {% include "components/_button.html" with label="Coba paket ini" href=register_url variant="primary" %}
+          <p class="mt-8 text-caption text-slate-gray">2x Kopi Susu · Meja A1</p>
+          <div class="mt-12 flex flex-wrap gap-8">
+            <span class="btn btn-primary btn-sm">Terima</span>
+            <span class="btn btn-danger btn-sm">Tolak</span>
+          </div>
+          <p class="mt-12 text-caption text-slate-gray">Peringatan 3 menit · tanda terlambat 5 menit</p>
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="mt-48 text-body text-slate-gray">Hubungi kami untuk informasi paket dan harga.</p>
-  {% endif %}
-</section>
+        <h3 class="mt-20 text-body font-semibold text-ink-charcoal">Kasir</h3>
+        <p class="mt-4 text-body-sm text-slate-gray">
+          Terima atau tolak dengan alasan, dan konfirmasi pembayaran tunai.
+        </p>
+      </article>
 
-{# -------------------------------------------------------------- Jaminan --- #}
-<section class="border-y border-hairline bg-pure-white">
-  <div class="mx-auto max-w-page px-24 py-88">
-    <h2 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">Kenapa aman dipakai</h2>
-    <div class="mt-48 grid grid-cols-1 gap-32 md:grid-cols-3">
-      <div class="flex flex-col gap-12">
-        <h3 class="text-heading-sm font-semibold text-ink-charcoal">Data tiap bisnis terpisah</h3>
-        <p class="text-body-sm text-pretty text-slate-gray">
-          Setiap permintaan divalidasi keanggotaan tenant dan cabangnya di server. Tidak
-          ada satu bisnis yang bisa membaca data bisnis lain.
+      <article class="reveal lift rounded-3xl border border-hairline bg-tint-lilac p-20" style="--i: 2">
+        <div class="rounded-2xl border border-hairline bg-panel p-16">
+          <div class="flex items-center justify-between">
+            <p class="text-body-sm font-semibold text-ink-charcoal">MAIN-0006</p>
+            {% include "components/_badge.html" with label="Diproses" tone="info" %}
+          </div>
+          <ul class="mt-8 flex flex-col gap-4 text-body-sm text-ink-charcoal">
+            <li><span class="font-bold">1x</span> Americano</li>
+            <li><span class="font-bold">2x</span> Kopi Susu <span class="text-caption text-slate-gray">tanpa gula</span></li>
+          </ul>
+          <div class="btn btn-primary btn-sm mt-12 w-full">Tandai siap</div>
+        </div>
+        <h3 class="mt-20 text-body font-semibold text-ink-charcoal">Layar dapur</h3>
+        <p class="mt-4 text-body-sm text-slate-gray">
+          Hanya order yang sudah boleh diproses. Digital menunggu pembayaran lunas.
         </p>
-      </div>
-      <div class="flex flex-col gap-12">
-        <h3 class="text-heading-sm font-semibold text-ink-charcoal">Pembayaran tidak dikira-kira</h3>
-        <p class="text-body-sm text-pretty text-slate-gray">
-          Pembayaran digital diverifikasi langsung dari penyedia pembayaran, bukan dari
-          bukti transfer atau halaman konfirmasi di browser.
-        </p>
-      </div>
-      <div class="flex flex-col gap-12">
-        <h3 class="text-heading-sm font-semibold text-ink-charcoal">Riwayat yang bisa ditelusuri</h3>
-        <p class="text-body-sm text-pretty text-slate-gray">
-          Perubahan order, konfirmasi pembayaran, refund, dan koreksi stok tercatat
-          lengkap dengan pelaksana dan waktunya.
-        </p>
-      </div>
+      </article>
     </div>
   </div>
 </section>
 
-{# --------------------------------------------------------------- Konten --- #}
-{% if latest_blog or latest_news %}
-<section class="mx-auto max-w-page px-24 py-88">
-  {% if latest_blog %}
-    <div class="flex flex-wrap items-end justify-between gap-16">
-      <h2 class="text-heading-lg font-semibold text-ink-charcoal">Dari blog</h2>
-      <a href="{% url 'website:blog_list' %}" class="text-body-sm font-medium text-electric-cobalt hover:underline">Semua tulisan blog</a>
+{# ------------------------------------------------------------- Matriks ------ #}
+<section class="border-t border-hairline bg-canvas-cream">
+  <div class="mx-auto max-w-page px-24 py-88">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="reveal text-balance text-heading-lg font-semibold">Satu sistem, seluruh operasional</h2>
+      <p class="reveal mt-16 text-body text-slate-gray" style="--i: 1">
+        Setiap bagian mencatat transaksinya sendiri, jadi order, uang, dan stok tidak pernah tercampur.
+      </p>
     </div>
-    <div class="mt-32 grid grid-cols-1 gap-24 md:grid-cols-3">
-      {% for post in latest_blog %}
-        {% include "website/_post_card.html" with post=post %}
-      {% endfor %}
-    </div>
-  {% endif %}
 
-  {% if latest_news %}
-    <div class="mt-64 flex flex-wrap items-end justify-between gap-16">
-      <h2 class="text-heading-lg font-semibold text-ink-charcoal">Berita terbaru</h2>
-      <a href="{% url 'website:news_list' %}" class="text-body-sm font-medium text-electric-cobalt hover:underline">Semua berita</a>
+    <div class="mt-48 grid grid-cols-1 gap-20 md:grid-cols-2 lg:grid-cols-3">
+      <article class="spot reveal p-24" style="--i: 0">
+        <p class="label">Produk &amp; harga</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Harga berbeda tiap cabang</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Atur harga dan ketersediaan per cabang. Perubahan harga tidak mengubah order lama.
+        </p>
+      </article>
+
+      <article class="spot reveal p-24" style="--i: 1">
+        <p class="label">Stok</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Stok tidak dijual dua kali</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Stok direservasi saat checkout, dikonsumsi saat mulai diproses, dan dilepas kalau order ditolak.
+        </p>
+      </article>
+
+      <article class="spot reveal p-24" style="--i: 2">
+        <p class="label">Pembayaran</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Tunai dan digital</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Tunai dikonfirmasi kasir. Digital diverifikasi dari penyedia pembayaran, bukan dari bukti transfer.
+        </p>
+      </article>
+
+      <article class="spot reveal p-24" style="--i: 3">
+        <p class="label">Refund</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Tercatat, tidak bisa dobel</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Nominal, alasan, pelaksana, dan batas wewenang tersimpan. Riwayat pembayaran tetap utuh.
+        </p>
+      </article>
+
+      <article class="spot reveal p-24" style="--i: 4">
+        <p class="label">Promosi</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Kuota yang tidak bocor</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Kuota dan batas per pelanggan dihitung di server, dan dikembalikan saat order dibatalkan.
+        </p>
+      </article>
+
+      <article class="spot reveal p-24" style="--i: 5">
+        <p class="label">Laporan</p>
+        <h3 class="mt-12 text-body font-semibold text-ink-charcoal">Angka yang bisa diekspor</h3>
+        <p class="mt-8 text-body-sm text-slate-gray">
+          Penjualan kotor, diskon, penjualan bersih, pembayaran tertagih, dan refund.
+        </p>
+      </article>
     </div>
-    <div class="mt-32 grid grid-cols-1 gap-24 md:grid-cols-3">
-      {% for post in latest_news %}
-        {% include "website/_post_card.html" with post=post %}
-      {% endfor %}
-    </div>
-  {% endif %}
+  </div>
 </section>
-{% endif %}
 
-{# ------------------------------------------------------------ CTA akhir --- #}
-<section class="bg-gradient-to-br from-canvas-cream via-[#c8dcf5] to-electric-cobalt">
-  <div class="mx-auto flex max-w-page flex-col items-center px-24 py-88 text-center">
-    <h2 class="max-w-3xl text-balance text-heading-xl font-semibold leading-tight text-ink-charcoal">
+{# --------------------------------------------------------------- Harga ------ #}
+<section id="harga" class="scroll-mt-88 border-t border-hairline bg-panel">
+  <div class="mx-auto max-w-page px-24 py-88">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="reveal text-balance text-heading-lg font-semibold">Harga sederhana</h2>
+      <p class="reveal mt-16 text-body text-slate-gray" style="--i: 1">
+        Berlangganan per bisnis, bukan per akun staf. Semua paket termasuk uji coba 14 hari.
+      </p>
+    </div>
+
+    {% if plans %}
+      <div class="mt-48 grid grid-cols-1 gap-24 md:grid-cols-3">
+        {% for plan in plans %}
+          <article class="reveal lift flex flex-col gap-16 rounded-3xl border border-hairline bg-panel p-24
+                          {% if forloop.counter == 2 %}shadow-lg ring-1 ring-electric-cobalt{% endif %}"
+                   style="--i: {{ forloop.counter0 }}">
+            <div>
+              <h3 class="text-body font-semibold text-ink-charcoal">{{ plan.name }}</h3>
+              <p class="mt-8 text-heading font-semibold tabular-nums text-ink-charcoal">
+                Rp {{ plan.monthly_price|floatformat:"0g" }}
+                <span class="text-body-sm font-normal text-slate-gray">/bulan</span>
+              </p>
+            </div>
+            <ul class="flex flex-col gap-8 text-body-sm text-slate-gray">
+              <li>{{ plan.max_branches }} cabang</li>
+              <li>{{ plan.max_accounts }} akun owner &amp; staf</li>
+              <li>QR menu, kasir, dan layar dapur</li>
+            </ul>
+            <div class="mt-auto">
+              {% include "components/_button.html" with label="Coba paket ini" href=register_url variant="primary" %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{# ----------------------------------------------------------------- FAQ ------ #}
+<section class="border-t border-hairline bg-canvas-cream">
+  <div class="mx-auto max-w-page px-24 py-88">
+    <h2 class="reveal text-center text-heading-lg font-semibold">Pertanyaan yang sering muncul</h2>
+
+    <div class="reveal mx-auto mt-48 max-w-3xl overflow-hidden rounded-3xl border border-hairline bg-panel" style="--i: 1">
+      <details class="group border-b border-hairline px-24 py-20 last:border-b-0">
+        <summary class="flex cursor-pointer items-center justify-between gap-16 text-body font-medium text-ink-charcoal">
+          Apakah pelanggan harus unduh aplikasi?
+          <span class="text-slate-gray transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <p class="mt-12 text-body-sm text-slate-gray">
+          Tidak. Pelanggan memindai QR di meja, memilih menu, lalu checkout dari browser.
+        </p>
+      </details>
+      <details class="group border-b border-hairline px-24 py-20 last:border-b-0">
+        <summary class="flex cursor-pointer items-center justify-between gap-16 text-body font-medium text-ink-charcoal">
+          Pembayaran digital belum masuk, apakah order lanjut ke dapur?
+          <span class="text-slate-gray transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <p class="mt-12 text-body-sm text-slate-gray">
+          Belum. Order digital baru masuk antrean dapur setelah pembayaran terverifikasi lunas dari penyedia
+          pembayaran. Order tunai bisa diatur agar masuk lebih awal lewat pengaturan bisnis.
+        </p>
+      </details>
+      <details class="group border-b border-hairline px-24 py-20 last:border-b-0">
+        <summary class="flex cursor-pointer items-center justify-between gap-16 text-body font-medium text-ink-charcoal">
+          Bisa dipakai untuk lebih dari satu cabang?
+          <span class="text-slate-gray transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <p class="mt-12 text-body-sm text-slate-gray">
+          Bisa. Batas jumlah cabang ditentukan paket, dan tiap cabang punya harga, stok, serta meja sendiri.
+        </p>
+      </details>
+      <details class="group border-b border-hairline px-24 py-20 last:border-b-0">
+        <summary class="flex cursor-pointer items-center justify-between gap-16 text-body font-medium text-ink-charcoal">
+          Apakah data bisnis saya terpisah dari bisnis lain?
+          <span class="text-slate-gray transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <p class="mt-12 text-body-sm text-slate-gray">
+          Ya. Setiap permintaan divalidasi keanggotaan tenant dan cabangnya di server, jadi satu bisnis tidak
+          bisa membaca data bisnis lain.
+        </p>
+      </details>
+      <details class="group px-24 py-20 last:border-b-0">
+        <summary class="flex cursor-pointer items-center justify-between gap-16 text-body font-medium text-ink-charcoal">
+          Berapa lama menyiapkannya?
+          <span class="text-slate-gray transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+        </summary>
+        <p class="mt-12 text-body-sm text-slate-gray">
+          Membuat akun, menambah kategori dan produk, lalu membuat meja dan mencetak QR-nya.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+{# ----------------------------------------------------------- CTA akhir ----- #}
+<section class="relative overflow-hidden border-t border-hairline bg-electric-cobalt">
+  {# The one patterned surface in the system. #}
+  <div class="absolute inset-0 opacity-25"
+       style="background-image: radial-gradient(currentColor 1.5px, transparent 1.5px); background-size: 22px 22px; color: var(--color-on-accent);"
+       aria-hidden="true"></div>
+  <div class="relative z-10 mx-auto flex max-w-page flex-col items-center px-24 py-88 text-center">
+    <h2 class="reveal max-w-3xl text-balance text-heading-xl font-semibold text-on-accent">
       Siap menerima order pertama lewat QR?
     </h2>
-    <p class="mt-16 max-w-[52ch] text-pretty text-subheading text-ink-charcoal">
-      Buat akun, tambahkan menu dan meja pertama, lalu cetak QR-nya. Tidak perlu
-      menyiapkan apa pun sebelumnya.
+    <p class="reveal mt-16 max-w-[48ch] text-pretty text-subheading text-on-accent/90" style="--i: 1">
+      Buat akun, tambahkan menu dan meja pertama, lalu cetak QR-nya.
     </p>
-    <div class="mt-32">
-      {% include "components/_button.html" with label="Mulai gratis sekarang" href=register_url variant="primary" size="lg" %}
+    <div class="reveal mt-32" style="--i: 2">
+      <a href="{{ register_url }}"
+         class="btn btn-lg bg-panel text-ink-charcoal shadow-lg hover:bg-canvas-cream">Mulai gratis sekarang</a>
     </div>
   </div>
 </section>

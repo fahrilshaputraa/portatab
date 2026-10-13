@@ -96,8 +96,15 @@ def validate_config(config: dict) -> list[str]:
 
 
 def _plan_rank(tenant) -> int:
+    """Templates a tenant's plan unlocks.
+
+    A tenant with no active subscription falls back to the entry tier, matching
+    ``subscriptions.services.plan_limits``. Treating "no subscription" as "no
+    templates" made the appearance editor raise instead of rendering.
+    """
     plan = active_plan(tenant)
-    return PLAN_ORDER.get(plan.code if plan else "", 0)
+    code = plan.code if plan else ""
+    return PLAN_ORDER.get(code, min(PLAN_ORDER.values()))
 
 
 def available_templates(tenant):

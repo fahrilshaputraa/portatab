@@ -27,7 +27,19 @@ def _config_from_form(form) -> dict:
 @require_permission(Perm.THEMES_MANAGE)
 def editor(request):
     tenant = request.tenant
-    theme = services.ensure_theme(tenant)
+
+    try:
+        theme = services.ensure_theme(tenant)
+    except services.ThemeError as exc:
+        # No catalogue yet (or every template deactivated): show the reason
+        # instead of failing the request.
+        return render(
+            request,
+            "themes/editor.html",
+            {"unavailable": str(exc), "theme": None, "form": None, "templates": [],
+             "publication": None, "draft_config": dict(services.DEFAULT_CONFIG)},
+        )
+
     allowed = services.available_templates(tenant)
 
     if request.method == "POST":
@@ -99,7 +111,11 @@ def editor(request):
 @require_permission(Perm.THEMES_MANAGE)
 @require_POST
 def publish(request):
-    theme = services.ensure_theme(request.tenant)
+    try:
+        theme = services.ensure_theme(request.tenant)
+    except services.ThemeError as exc:
+        messages.error(request, str(exc))
+        return redirect("themes:editor")
     try:
         publication = services.publish(tenant_theme=theme, actor=request.user)
     except services.ThemeError as exc:

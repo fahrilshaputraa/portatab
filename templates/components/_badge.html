@@ -1,14 +1,15 @@
 {% comment %}
-Status badge. Status is never communicated by colour alone (PRD §22.4) — the label is text.
-Params: label, tone ("neutral"|"info"|"success"|"warning"|"danger", default "neutral")
+Status chip. Colour is never the only signal: the label always names the state.
+Params: label, tone ("neutral"|"info"|"success"|"warning"|"danger")
 {% endcomment %}
-{% with tone=tone|default:'neutral' %}
-  <span class="inline-flex items-center gap-6 rounded-lg px-8 py-2 text-caption font-medium
-    {% if tone == 'success' %}bg-emerald-50 text-forest
-    {% elif tone == 'warning' %}bg-amber-50 text-amber-700
-    {% elif tone == 'danger' %}bg-red-50 text-red-700
-    {% elif tone == 'info' %}bg-lavender-mist text-vivid-violet
-    {% else %}bg-canvas-cream text-slate-gray{% endif %}">
-    {{ label }}
-  </span>
-{% endwith %}
+{% if tone == 'success' %}
+  <span class="chip chip-success">{{ label }}</span>
+{% elif tone == 'warning' %}
+  <span class="chip chip-warn">{{ label }}</span>
+{% elif tone == 'danger' %}
+  <span class="chip chip-danger">{{ label }}</span>
+{% elif tone == 'info' %}
+  <span class="chip chip-accent">{{ label }}</span>
+{% else %}
+  <span class="chip">{{ label }}</span>
+{% endif %}

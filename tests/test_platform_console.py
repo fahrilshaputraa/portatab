@@ -143,3 +143,34 @@ def test_granting_platform_admin_makes_the_console_reachable(client, owner):
 
     assert client.get(reverse("platform_console:tenant_list")).status_code == 200
     assert PlatformAdminMembership.objects.filter(user=tenant_owner).exists()
+
+
+@pytest.mark.django_db
+def test_tenant_search_empty_state_and_reset(client, platform_admin, tenant):
+    client.force_login(platform_admin)
+
+    body = client.get(
+        reverse("platform_console:tenant_list"), {"q": "missing-business"}
+    ).content.decode()
+
+    assert "Tenant tidak ditemukan" in body
+    assert 'for="tenant-search"' in body
+    assert 'value="missing-business"' in body
+    assert '>Reset</a>' in body
+    assert 'aria-current="page"' in body
+
+
+@pytest.mark.django_db
+def test_suspended_tenant_detail_shows_orders_paused(client, platform_admin, tenant, branch):
+    tenant.status = TenantStatus.SUSPENDED
+    tenant.save(update_fields=["status"])
+    client.force_login(platform_admin)
+
+    body = client.get(
+        reverse("platform_console:tenant_detail", args=[tenant.pk])
+    ).content.decode()
+
+    assert "Dijeda" in body
+    assert "Menerima order" not in body
+    assert "Aktifkan tenant" in body
+    assert 'scope="col"' in body

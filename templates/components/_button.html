@@ -1,14 +1,17 @@
 {% comment %}
-Link styled as a pill button. Styles live in the `.btn` component classes so the
+Link styled as a button. Styles live in the `.btn` component classes so the
 design tokens are defined once (see static/css/input.css).
 
 Params:
-  label   — button text
-  href    — destination (required; use <button class="btn btn-primary"> for submits)
-  variant — "primary" | "ghost" | "dark" | "danger" (default "primary")
-  size    — "sm" | "md" | "lg" (default "md")
-  block   — truthy makes it full width
+  label      — button text
+  href       — destination (use <button class="btn btn-primary"> for form submits)
+  variant    — "primary" | "ghost" | "dark" | "danger" (default "primary")
+  size       — "sm" | "md" | "lg" (default "md")
+  full_width — truthy stretches the button to its container
 
+Note: the width flag is deliberately NOT called `block`. Django sets an internal
+`block` variable while rendering inside a {% block %}, so `{% if block %}` was
+always truthy and every CTA silently rendered full width.
 {% endcomment %}
 <a href="{{ href }}"
-   class="btn btn-{{ variant|default:'primary' }}{% if size == 'sm' %} btn-sm{% elif size == 'lg' %} btn-lg{% endif %}{% if block %} btn-block{% endif %}">{{ label }}</a>
+   class="btn btn-{{ variant|default:'primary' }}{% if size == 'sm' %} btn-sm{% elif size == 'lg' %} btn-lg{% endif %}{% if full_width %} btn-block{% endif %}">{{ label }}</a>

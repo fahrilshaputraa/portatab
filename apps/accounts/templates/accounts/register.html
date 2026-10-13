@@ -1,33 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Daftar — PortaTap{% endblock %}
 
 {% block content %}
-<div class="mx-auto flex min-h-screen max-w-md flex-col justify-center px-16 py-48">
-  <a href="/" class="mb-32 text-heading font-semibold text-ink-charcoal">PortaTap</a>
-  <h1 class="text-heading-lg font-semibold leading-tight text-ink-charcoal">Mulai bisnis Anda</h1>
-  <p class="mt-8 text-body text-slate-gray">Buat akun owner, tenant, dan cabang pertama dalam satu langkah.</p>
+<div class="flex min-h-screen items-center justify-center px-16 py-48">
 
-  <div class="mt-32">
-    {% include "partials/_form_errors.html" %}
+  <div class="w-full max-w-[26rem]">
+    <a href="/" class="flex items-center gap-8 text-heading font-semibold text-ink-charcoal">
+      <img src="{% static 'img/portatab-symbol.svg' %}" alt="" width="24" height="24" class="h-[24px] w-[24px]" aria-hidden="true">
+      <span>PortaTap</span>
+    </a>
+
+    <div class="panel mt-24 p-24">
+      <h1 class="text-heading font-semibold text-ink-charcoal">Mulai bisnis Anda</h1>
+      <p class="mt-4 text-body-sm text-slate-gray">
+        Buat akun owner, tenant, dan cabang pertama dalam satu langkah. Uji coba 14 hari
+        langsung aktif.
+      </p>
+
+      {% include "partials/_form_errors.html" %}
+
+      <form method="post" class="mt-24 flex flex-col gap-16">
+        {% csrf_token %}
+        {% include "components/_field.html" with field=form.name %}
+        {% include "components/_field.html" with field=form.email %}
+        {% include "components/_field.html" with field=form.password1 %}
+        {% include "components/_field.html" with field=form.password2 %}
+        {% include "components/_field.html" with field=form.business_name %}
+        {% include "components/_field.html" with field=form.branch_name %}
+        <button type="submit" class="btn btn-primary btn-lg btn-block mt-8">Daftar</button>
+      </form>
+    </div>
+
+    <p class="mt-16 text-center text-body-sm text-slate-gray">
+      Sudah punya akun?
+      <a href="{% url 'accounts:login' %}" class="font-medium text-electric-cobalt hover:underline">Masuk</a>
+    </p>
   </div>
-
-  <form method="post" class="mt-24 flex flex-col gap-16">
-    {% csrf_token %}
-    {% include "components/_field.html" with field=form.name %}
-    {% include "components/_field.html" with field=form.email %}
-    {% include "components/_field.html" with field=form.password1 %}
-    {% include "components/_field.html" with field=form.password2 %}
-    {% include "components/_field.html" with field=form.business_name %}
-    {% include "components/_field.html" with field=form.branch_name %}
-    <button type="submit" class="btn btn-primary btn-block mt-8">
-      Daftar
-    </button>
-  </form>
-
-  <p class="mt-24 text-body-sm text-slate-gray">
-    Sudah punya akun?
-    <a href="{% url 'accounts:login' %}" class="font-medium text-electric-cobalt hover:underline">Masuk</a>
-  </p>
 </div>
 {% endblock %}

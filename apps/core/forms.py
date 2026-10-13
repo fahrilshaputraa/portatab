@@ -18,7 +18,7 @@ TEXT_INPUT_WIDGETS = {
 }
 
 INPUT_CLASS = (
-    "w-full rounded-2xl border border-hairline bg-pure-white px-16 py-12 text-body "
+    "w-full rounded-lg border border-hairline bg-canvas-cream px-16 py-12 text-body "
     "text-ink-charcoal placeholder:text-steel-gray focus:border-electric-cobalt "
     "focus:outline-none focus:ring-1 focus:ring-electric-cobalt"
 )

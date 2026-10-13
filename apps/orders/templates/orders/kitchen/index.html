@@ -1,5 +1,6 @@
 {% extends "tenants/base_dashboard.html" %}
 
+{# A kitchen screen is read from metres away in a dim room: ink surface. #}
 {% block title %}Kitchen Display — PortaTap{% endblock %}
 
 {% block content %}
@@ -12,7 +13,7 @@
       </p>
     </div>
     <button id="sound-toggle" type="button"
-            class="btn btn-ghost btn-sm">
+            class="btn btn-ghost btn-lg min-h-[48px]">
       Aktifkan suara
     </button>
   </div>
@@ -37,7 +38,7 @@
       audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
       audioCtx.resume();
       toggle.textContent = "Suara aktif";
-      toggle.classList.add("bg-emerald-50", "text-forest");
+      toggle.classList.add("bg-forest/12", "text-forest");
     });
 
     function beep() {

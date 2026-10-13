@@ -62,8 +62,6 @@ def landing(request):
             "features": FEATURES,
             "steps": STEPS,
             "plans": Plan.objects.filter(status=PlanStatus.ACTIVE).order_by("monthly_price"),
-            "latest_blog": selectors.latest_posts(kind=PostKind.BLOG, limit=3),
-            "latest_news": selectors.latest_posts(kind=PostKind.NEWS, limit=3),
         },
     )
 

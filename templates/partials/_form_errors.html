@@ -3,13 +3,13 @@ Renders non-field and field-level errors for a Django form.
 Expects: form
 {% endcomment %}
 {% if form.non_field_errors %}
-  <div class="mb-16 rounded-2xl border border-red-200 bg-red-50 px-16 py-12 text-body-sm text-red-700">
+  <div class="mb-16 rounded-2xl border border-danger/30 bg-danger/10 px-16 py-12 text-body-sm text-danger">
     {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
   </div>
 {% endif %}
 {% for field in form %}
   {% if field.errors %}
-    <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 px-16 py-12 text-body-sm text-red-700">
+    <div class="mb-8 rounded-2xl border border-danger/30 bg-danger/10 px-16 py-12 text-body-sm text-danger">
       <p class="font-medium">{{ field.label }}</p>
       {% for error in field.errors %}<p>{{ error }}</p>{% endfor %}
     </div>

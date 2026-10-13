@@ -10,7 +10,7 @@
   </p>
 
   {# ------------------------------------------------------------ Status --- #}
-  <section class="mt-32 rounded-2xl border border-hairline bg-pure-white p-24">
+  <section class="mt-32 rounded-2xl border border-hairline bg-panel p-24">
     {% if subscription %}
       <div class="flex flex-wrap items-center justify-between gap-16">
         <div>
@@ -41,7 +41,7 @@
           {{ usage.branches.0 }} / {{ usage.branches.1 }}
         </p>
         {% if usage.branches.0 >= usage.branches.1 %}
-          <p class="mt-4 text-caption text-red-600">Batas paket tercapai.</p>
+          <p class="mt-4 text-caption text-danger">Batas paket tercapai.</p>
         {% endif %}
       </div>
       <div class="rounded-2xl border border-hairline bg-surface-ivory p-16">
@@ -50,14 +50,14 @@
           {{ usage.accounts.0 }} / {{ usage.accounts.1 }}
         </p>
         {% if usage.accounts.0 >= usage.accounts.1 %}
-          <p class="mt-4 text-caption text-red-600">Batas paket tercapai.</p>
+          <p class="mt-4 text-caption text-danger">Batas paket tercapai.</p>
         {% endif %}
       </div>
     </div>
   </section>
 
   {# --------------------------------------------------- Ubah paket --- #}
-  <section class="mt-32 rounded-2xl border border-hairline bg-pure-white p-24">
+  <section class="mt-32 rounded-2xl border border-hairline bg-panel p-24">
     <h2 class="text-heading-sm font-semibold text-ink-charcoal">
       {% if subscription %}Ubah paket{% else %}Mulai berlangganan{% endif %}
     </h2>
@@ -80,7 +80,7 @@
   {# ------------------------------------------------------------ Invoice --- #}
   <section class="mt-32">
     <h2 class="text-heading-sm font-semibold text-ink-charcoal">Invoice</h2>
-    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-panel">
       <table class="w-full text-left text-body-sm">
         <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
           <tr>

@@ -14,7 +14,7 @@
     {% include "components/_badge.html" with label=order.get_payment_status_display tone=order.payment_status|payment_tone %}
   </div>
 
-  <section class="mt-16 rounded-2xl border border-hairline bg-pure-white p-16">
+  <section class="mt-16 rounded-2xl border border-hairline bg-panel p-16">
     {% for item in order.items.all %}
       <div class="flex justify-between border-b border-hairline py-8 text-body-sm last:border-0">
         <span>{{ item.quantity }}× {{ item.product_name_snapshot }}{% if item.variant_name_snapshot %} ({{ item.variant_name_snapshot }}){% endif %}</span>

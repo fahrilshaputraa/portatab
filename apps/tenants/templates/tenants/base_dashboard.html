@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>{% block title %}PortaTap{% endblock %}</title>
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'img/site.webmanifest' %}">
+  <meta name="theme-color" content="#f4f3f1">
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body class="min-h-full bg-canvas-cream text-ink-charcoal antialiased">
 <div class="flex min-h-screen">
-  <aside class="hidden w-64 shrink-0 border-r border-hairline bg-pure-white lg:flex lg:flex-col">
-    <div class="flex h-16 items-center px-24 text-heading font-semibold text-ink-charcoal">PortaTap</div>
+  <aside class="hidden w-[256px] shrink-0 border-r border-hairline bg-panel lg:flex lg:flex-col">
+    <div class="flex h-[64px] items-center gap-8 px-24 text-heading font-semibold text-ink-charcoal"><img src="{% static 'img/portatab-symbol.svg' %}" alt="" width="24" height="24" class="h-[24px] w-[24px]" aria-hidden="true"><span>PortaTap</span></div>
     <nav class="flex-1 overflow-y-auto px-16 py-16 text-body-sm">
       <p class="px-8 py-8 text-caption font-semibold uppercase tracking-wide text-steel-gray">Ringkasan</p>
       <a href="{% url 'tenants:dashboard' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Dashboard</a>
@@ -34,7 +39,7 @@
       <a href="{% url 'notifications:list' %}" class="flex items-center justify-between rounded-full px-16 py-8 hover:bg-surface-ivory">
         <span>Notifikasi</span>
         {% if unread_notifications %}
-          <span class="rounded-full bg-electric-cobalt px-8 py-2 text-caption font-medium text-pure-white">{{ unread_notifications }}</span>
+          <span class="rounded-full bg-electric-cobalt px-8 py-2 text-caption font-medium text-on-accent">{{ unread_notifications }}</span>
         {% endif %}
       </a>
       <a href="{% url 'subscriptions:overview' %}" class="block rounded-full px-16 py-8 hover:bg-surface-ivory">Langganan</a>
@@ -48,7 +53,7 @@
   </aside>
 
   <div class="flex min-w-0 flex-1 flex-col">
-    <header class="flex h-16 items-center justify-between border-b border-hairline bg-pure-white px-24">
+    <header class="flex h-[64px] items-center justify-between border-b border-hairline bg-panel px-24">
       {% if current_tenant %}
         <form method="post" action="{% url 'tenants:switch_workspace' %}" class="flex items-center gap-8">
           {% csrf_token %}

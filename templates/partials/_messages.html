@@ -1,7 +1,7 @@
 {% if messages %}
   <div id="messages" class="mx-auto w-full max-w-page px-16 pt-16" role="status" aria-live="polite">
     {% for message in messages %}
-      <div class="mb-8 rounded-2xl border border-hairline bg-pure-white px-16 py-12 text-body
+      <div class="mb-8 rounded-2xl border border-hairline bg-panel px-16 py-12 text-body
                   {% if message.tags == 'error' %}border-l-4 border-l-red-500{% elif message.tags == 'success' %}border-l-4 border-l-forest{% endif %}">
         {{ message }}
       </div>

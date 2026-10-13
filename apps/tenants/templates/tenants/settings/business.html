@@ -9,7 +9,7 @@
 
   <div class="mt-32 grid grid-cols-1 gap-24 lg:grid-cols-2">
     {# ------------------------------------------------------------ Profil --- #}
-    <section class="rounded-2xl border border-hairline bg-pure-white p-24">
+    <section class="rounded-2xl border border-hairline bg-panel p-24">
       <h2 class="text-heading-sm font-semibold text-ink-charcoal">Profil bisnis</h2>
       <form method="post" class="mt-16 flex flex-col gap-16">
         {% csrf_token %}
@@ -25,7 +25,7 @@
     </section>
 
     {# --------------------------------------------------------- Kebijakan --- #}
-    <section class="rounded-2xl border border-hairline bg-pure-white p-24">
+    <section class="rounded-2xl border border-hairline bg-panel p-24">
       <h2 class="text-heading-sm font-semibold text-ink-charcoal">Kebijakan operasional</h2>
       <form method="post" class="mt-16 flex flex-col gap-16">
         {% csrf_token %}
@@ -48,7 +48,7 @@
       <a href="{% url 'tenants:branch_create' %}" class="btn btn-primary">Tambah cabang</a>
     </div>
 
-    <div class="mt-16 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <div class="mt-16 overflow-hidden rounded-2xl border border-hairline bg-panel">
       <table class="w-full text-left text-body-sm">
         <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
           <tr>
@@ -69,7 +69,7 @@
                 {% if branch.accepts_orders %}
                   <span class="text-forest">Aktif</span>
                 {% else %}
-                  <span class="text-red-600">Dijeda</span>
+                  <span class="text-danger">Dijeda</span>
                 {% endif %}
               </td>
               <td class="px-16 py-12">

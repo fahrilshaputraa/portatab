@@ -4,30 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Admin Platform — PortaTap{% endblock %}</title>
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="48x48">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'img/site.webmanifest' %}">
+  <meta name="theme-color" content="#0068F9">
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 <body class="min-h-full bg-canvas-cream text-ink-charcoal antialiased">
-  <header class="border-b border-hairline bg-pure-white">
-    <div class="mx-auto flex h-72 max-w-page items-center justify-between gap-24 px-24">
-      <div class="flex items-center gap-24">
-        <span class="text-heading font-semibold text-ink-charcoal">PortaTap</span>
-        <span class="rounded-full bg-lavender-mist px-12 py-6 text-caption font-medium text-vivid-violet">Admin platform</span>
-      </div>
-      <nav class="flex items-center gap-24 text-body-sm font-medium">
-        <a href="{% url 'website_admin:post_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Konten</a>
-        <a href="{% url 'platform_console:tenant_list' %}" class="text-ink-charcoal hover:text-electric-cobalt">Tenant</a>
-        <a href="{% url 'platform_console:audit_log' %}" class="text-ink-charcoal hover:text-electric-cobalt">Audit</a>
-        <a href="{% url 'platform_console:health' %}" class="text-ink-charcoal hover:text-electric-cobalt">Health</a>
-        <a href="{% url 'website:landing' %}" class="text-slate-gray hover:text-electric-cobalt">Lihat situs</a>
+  <a href="#admin-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-panel focus:p-16">Lewati ke konten</a>
+  <header class="border-b border-hairline bg-panel">
+    <div class="mx-auto flex max-w-page items-center justify-between gap-16 px-16 py-16 sm:px-32">
+      <a href="{% url 'platform_console:tenant_list' %}" class="flex min-w-0 items-center gap-12">
+        <img src="{% static 'img/portatab-symbol.svg' %}" alt="" width="32" height="32" class="shrink-0" aria-hidden="true">
+        <div>
+          <span class="block text-heading-sm font-semibold">PortaTap</span>
+          <span class="block text-caption text-slate-gray">Admin platform</span>
+        </div>
+      </a>
+      <div class="flex shrink-0 items-center gap-16">
+        <span class="hidden text-body-sm text-slate-gray sm:block">{{ request.user.name }}</span>
         <form method="post" action="{% url 'accounts:logout' %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-ghost btn-sm">Keluar</button>
         </form>
-      </nav>
+      </div>
     </div>
+    {% with current=request.resolver_match.url_name namespace=request.resolver_match.namespace %}
+    <nav class="mx-auto flex max-w-page gap-8 overflow-x-auto px-16 sm:px-32" aria-label="Navigasi admin platform">
+      <a href="{% url 'platform_console:tenant_list' %}" class="admin-tab" {% if namespace == 'platform_console' and current == 'tenant_list' or namespace == 'platform_console' and current == 'tenant_detail' %}aria-current="page"{% endif %}>Tenant</a>
+      <a href="{% url 'platform_console:health' %}" class="admin-tab" {% if namespace == 'platform_console' and current == 'health' %}aria-current="page"{% endif %}>System health</a>
+      <a href="{% url 'platform_console:audit_log' %}" class="admin-tab" {% if namespace == 'platform_console' and current == 'audit_log' %}aria-current="page"{% endif %}>Audit log</a>
+      <a href="{% url 'website_admin:post_list' %}" class="admin-tab" {% if namespace == 'website_admin' %}aria-current="page"{% endif %}>Konten</a>
+      <a href="{% url 'website:landing' %}" class="admin-tab sm:ml-auto">Lihat situs</a>
+    </nav>
+    {% endwith %}
   </header>
 
-  <main class="mx-auto max-w-page px-24 py-32">
+  <main id="admin-content" class="mx-auto w-full min-w-0 max-w-page px-16 py-24 sm:px-32 sm:py-32">
     {% include "partials/_messages.html" %}
     {% block content %}{% endblock %}
   </main>

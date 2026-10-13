@@ -1,81 +1,180 @@
-/* Tailwind v4 source. Built by the Tailwind CLI into static/css/app.css.
+/* PortaTap design system. Builds to static/css/app.css via the Tailwind CLI.
  *
- * Design tokens come from DESIGN.md (PortaTap style reference):
- * warm cream canvas, electric cobalt as the only filled action colour,
- * featherlight hairline borders, pill buttons (48px), 16px cards.
+ * Direction: "Ink & Ticket".
+ *   - One token set, two surface modes. `data-surface="ink"` is worn by the
+ *     public brand pages and the dim-room operator screens (kitchen, cashier);
+ *     everything else stays on the daylight values. Token names are stable, so
+ *     every existing template restyles without edits.
+ *   - Cobalt stays the single action colour (DESIGN.md identity). Shape language
+ *     is ticket-led: hairline rules, squared 10-14px corners, no card soup.
+ *   - Numbers are tabular everywhere they are compared down a column.
+ *
+ * The referenced component libraries (MagicUI, Aceternity, 21st.dev) are React
+ * packages and cannot be installed into a server-rendered Django app; their
+ * visual language (bento, spotlight tiles, border beams) is reproduced natively
+ * below and in static/js/app.js.
  */
+
 @import "tailwindcss";
 
-/* Scan Django templates (project-level and per-app). */
 @source "../../templates";
 @source "../../apps";
 
+/* ---- Face: Plus Jakarta Sans (OFL, Google Fonts) -------------------------
+ *
+ * DESIGN.md names Roobert by Displaay Type Foundry. Roobert is a commercial
+ * licence, so it is not vendored here: mirror sites that offer it "free" breach
+ * that licence and ship unverified binaries.
+ *
+ * Plus Jakarta Sans is the open stand-in: the same geometric grotesque with
+ * clean horizontal and vertical terminals and smooth stem connections, drawn
+ * for Jakarta's city identity, which suits an Indonesian F&B product. It is
+ * SIL Open Font Licence 1.1, so self-hosting is permitted and free.
+ *
+ * Files are vendored into static/fonts/ rather than linked from a font CDN: the
+ * app renders offline and makes no third-party request at page load.
+ * Source: @fontsource-variable/plus-jakarta-sans 5.3.0, variable weight 200-800.
+ *
+ * To adopt licensed Roobert later, buy the web licence and put "Roobert" first
+ * in --font-sans; nothing else changes. */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/plus-jakarta-sans-latin-ext.woff2") format("woff2");
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+
 @theme {
-  --color-canvas-cream: #faf9f7;
-  --color-surface-ivory: #fbfaf7;
-  --color-pure-white: #ffffff;
-  --color-lavender-mist: #f4f0ff;
-  --color-powder-blue: #d6e4f1;
-  --color-ink-charcoal: #121722;
-  --color-deep-ink: #1d1d1d;
-  --color-mid-graphite: #2d2d2d;
-  --color-slate-gray: #777c86;
-  --color-steel-gray: #a5a5a5;
-  --color-hairline: #efefef;
-  --color-faint-gray: #cccccc;
-  --color-electric-cobalt: #0068f9;
-  --color-deep-cobalt: #024bb1;
-  --color-cerulean: #0074dd;
-  --color-vivid-violet: #6736eb;
-  --color-forest: #046645;
+  /* ---- Colour: light, high contrast, one accent + pastel washes ----------
+   * Matches the reference language: near-white page, pure white surfaces,
+   * hairline borders, near-black type, a single vivid blue for action, and
+   * soft pastel tints reserved for decorative panels and section washes. */
+  --color-canvas-cream: #fbfbfc;
+  --color-surface-ivory: #f5f6f8;
+  --color-panel: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-lavender-mist: #ece7ff;
+  --color-powder-blue: #dbe6f7;
+  --color-ink-charcoal: #0d0f14;
+  --color-deep-ink: #1a1d24;
+  --color-mid-graphite: #363b45;
+  --color-slate-gray: #5f6470;
+  --color-steel-gray: #8d929e;
+  --color-hairline: #e9eaee;
+  --color-faint-gray: #c9ccd4;
+  --color-electric-cobalt: #2f6bff;
+  --color-deep-cobalt: #1f52d6;
+  --color-cerulean: #0e7ac4;
+  --color-vivid-violet: #6a4bff;
+  --color-forest: #0b6b4a;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Pastel tints: decorative panels only, never status. */
+  --color-tint-mint: #ddf3e4;
+  --color-tint-peach: #fde8d6;
+  --color-tint-lilac: #e8e2ff;
+  --color-tint-sky: #dbe9ff;
+  --color-tint-lemon: #fbf1d4;
 
-  /* Numeric spacing utilities are pixel-valued (spacing-24 == 24px), matching
-   * the 8px-base scale in DESIGN.md. */
-  --spacing: 1px;
-  --spacing-8: 8px;
-  --spacing-16: 16px;
-  --spacing-24: 24px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-64: 64px;
-  --spacing-80: 80px;
-  --spacing-88: 88px;
+  /* Status colours carry meaning, never decoration. */
+  --color-danger: #c0392b;
+  --color-warn: #a5680a;
 
-  --container-page: 1200px;
+  /* ---- Type -------------------------------------------------------------
+   * Scale, weights and line heights are taken verbatim from DESIGN.md's type
+   * scale (13/15/16/18/20/24/40/48/57/84 at 1.06-1.56 leading). Tailwind v4
+   * carries the leading with each size token, so a heading cannot drift off
+   * the documented rhythm. */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
 
   --text-caption: 13px;
+  --text-caption--line-height: 1.5;
   --text-body-sm: 15px;
+  --text-body-sm--line-height: 1.5;
   --text-body: 16px;
+  --text-body--line-height: 1.56;
   --text-subheading: 18px;
+  --text-subheading--line-height: 1.5;
   --text-heading-sm: 20px;
+  --text-heading-sm--line-height: 1.38;
   --text-heading: 24px;
+  --text-heading--line-height: 1.33;
   --text-heading-lg: 40px;
+  --text-heading-lg--line-height: 1.25;
   --text-heading-xl: 48px;
+  --text-heading-xl--line-height: 1.2;
   --text-display: 57px;
+  --text-display--line-height: 1.09;
+  /* DESIGN.md calls the tight display leading signature; a hair of negative
+   * tracking keeps an 84px block from reading loose. */
+  --text-display--letter-spacing: -0.015em;
   --text-display-lg: 84px;
+  --text-display-lg--line-height: 1.06;
+  --text-display-lg--letter-spacing: -0.02em;
 
-  --radius-lg: 8px;
-  --radius-2xl: 16px;
-  --radius-3xl: 32px;
+  /* Tracked elements (uppercase labels, small caps) use the DESIGN.md value. */
+  --tracking-label: 0.077em;
+
+  /* ---- Space: numeric utilities are pixel-valued (px-24 == 24px) --------- */
+  --spacing: 1px;
+
+  --container-page: 1240px;
+
+  /* ---- Shape: soft cards, pill actions (reference language) -------------- */
+  --radius-sm: 6px;
+  --radius-lg: 10px;
+  --radius-2xl: 14px;
+  --radius-3xl: 20px;
   --radius-full: 9999px;
 
-  --shadow-subtle: rgba(0, 0, 0, 0.07) 0px 1px 1px 0px, rgba(0, 0, 0, 0.04) 0px -1px 1px 0px inset,
-    rgba(0, 0, 0, 0.14) 0px 0px 0px 0.5px inset;
-  --shadow-lg: rgba(0, 0, 0, 0.04) 0px 20px 20px -8px;
+  /* ---- Depth: hairlines and inset edges instead of drop shadows ---------- */
+  --shadow-subtle: 0 1px 2px rgb(16 24 40 / 0.05), 0 1px 3px rgb(16 24 40 / 0.04);
+  --shadow-lg: 0 24px 48px -12px rgb(16 24 40 / 0.18);
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 620ms;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     font-family: var(--font-sans);
     font-size: var(--text-body);
-    line-height: 1.56;
+    line-height: 1.55;
+    /* DESIGN.md: "ss01 on, kern on". */
+    font-feature-settings: "ss01" 1, "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   /* Keyboard users must always see where focus is (WCAG 2.4.7). Declared once
-   * for every operable control instead of per component. */
+   * for every operable control rather than per component. */
   a:focus-visible,
   button:focus-visible,
   input:focus-visible,
@@ -85,6 +184,7 @@
   [tabindex]:focus-visible {
     outline: 2px solid var(--color-electric-cobalt);
     outline-offset: 2px;
+    border-radius: var(--radius-sm);
   }
 
   /* Tailwind preflight leaves buttons with the default cursor. */
@@ -93,11 +193,25 @@
   summary {
     cursor: pointer;
   }
-  button:disabled {
+  button:disabled,
+  [aria-disabled="true"] {
     cursor: not-allowed;
+    opacity: 0.55;
   }
 
-  /* Honour the OS reduced-motion preference. */
+  ::selection {
+    background: color-mix(in oklab, var(--color-electric-cobalt) 30%, transparent);
+  }
+
+  /* Numbers that get compared down a column read as columns. */
+  table,
+  th,
+  td,
+  time,
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -110,94 +224,354 @@
   }
 }
 
-/* Pill button system (DESIGN.md: 48px radius, cobalt is the only filled action).
- * Defined once so templates compose "btn btn-primary" instead of repeating
- * utility strings across every page. */
+/* ── Controls ──────────────────────────────────────────────────────────────
+ * Squared-off 10px radius instead of the old full pill: the system reads as an
+ * instrument now, not a marketing page. */
 @layer components {
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 24px;
-    border-radius: 9999px;
-    padding: 12px 24px;
+    gap: 8px;
+    min-height: 40px;
+    border-radius: var(--radius-full);
+    padding: 10px 20px;
     font-size: var(--text-body-sm);
-    font-weight: 500;
+    font-weight: 550;
     line-height: 1.2;
     text-align: center;
+    white-space: nowrap;
     transition:
-      background-color 200ms ease,
-      border-color 200ms ease,
-      color 200ms ease;
+      background-color var(--dur-fast) var(--ease-out-quart),
+      border-color var(--dur-fast) var(--ease-out-quart),
+      color var(--dur-fast) var(--ease-out-quart),
+      box-shadow var(--dur-fast) var(--ease-out-quart),
+      transform var(--dur-fast) var(--ease-out-quart);
+  }
+  .btn:active {
+    transform: translateY(1px);
   }
   .btn-lg {
-    padding: 14px 32px;
+    min-height: 48px;
+    padding: 14px 26px;
     font-size: var(--text-body);
   }
   .btn-sm {
-    padding: 8px 16px;
+    min-height: 32px;
+    padding: 7px 12px;
     font-size: var(--text-caption);
+  }
+  .btn-block {
+    width: 100%;
   }
   .btn-primary {
     background: var(--color-electric-cobalt);
-    color: var(--color-pure-white);
+    color: var(--color-on-accent);
   }
   .btn-primary:hover {
     background: var(--color-deep-cobalt);
   }
   .btn-ghost {
     border: 1px solid var(--color-hairline);
-    background: var(--color-pure-white);
+    background: var(--color-panel);
     color: var(--color-ink-charcoal);
   }
   .btn-ghost:hover {
-    border-color: var(--color-powder-blue);
+    border-color: var(--color-electric-cobalt);
+    color: var(--color-electric-cobalt);
   }
   .btn-dark {
     background: var(--color-ink-charcoal);
-    color: var(--color-pure-white);
+    color: var(--color-canvas-cream);
   }
   .btn-danger {
-    border: 1px solid var(--color-hairline);
-    background: var(--color-pure-white);
-    color: #b91c1c;
+    border: 1px solid color-mix(in oklab, var(--color-danger) 40%, transparent);
+    background: transparent;
+    color: var(--color-danger);
   }
   .btn-danger:hover {
-    border-color: #fecaca;
-  }
-  .btn-block {
-    width: 100%;
+    background: color-mix(in oklab, var(--color-danger) 12%, transparent);
   }
 }
 
-/* Product screenshot frame — one definition reused by every showcase preview. */
+/* ── Surfaces & structure ─────────────────────────────────────────────────── */
 @layer components {
+  /* The one container primitive. Panels are quiet: hairline, flat, no glow. */
+  .panel {
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-2xl);
+    background: var(--color-panel);
+  }
+  .panel-flush {
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  /* Bento tile with a pointer-tracking spotlight (native stand-in for the
+   * Aceternity/MagicUI spotlight card). The highlight confirms the tile is
+   * interactive; --mx/--my are set by static/js/app.js on pointermove. */
+  .spot {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface-ivory);
+    transition:
+      border-color 200ms var(--ease-out-quart),
+      background-color 200ms var(--ease-out-quart);
+  }
+  .spot::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 0%),
+      color-mix(in oklab, var(--color-electric-cobalt) 26%, transparent),
+      transparent 68%
+    );
+    transition: opacity 220ms var(--ease-out-quart);
+  }
+  .spot:hover {
+    border-color: color-mix(in oklab, var(--color-electric-cobalt) 45%, var(--color-hairline));
+  }
+  .spot:hover::before {
+    opacity: 1;
+  }
+  @media (pointer: coarse) {
+    .spot::before {
+      display: none;
+    }
+  }
+
+  /* An order as a kitchen docket: accent rule on the reading edge, hairline
+   * separators, meta in small caps. */
+  .ticket {
+    position: relative;
+    border: 1px solid var(--color-hairline);
+    border-inline-start: 3px solid var(--color-faint-gray);
+    border-radius: var(--radius-lg);
+    background: var(--color-panel);
+  }
+  .ticket[data-state="pending"] {
+    border-inline-start-color: var(--color-warn);
+  }
+  .ticket[data-state="active"] {
+    border-inline-start-color: var(--color-electric-cobalt);
+  }
+  .ticket[data-state="ready"] {
+    border-inline-start-color: var(--color-forest);
+  }
+  .ticket[data-state="closed"] {
+    border-inline-start-color: var(--color-faint-gray);
+  }
+  .ticket-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    padding: 10px 14px;
+    font-size: var(--text-caption);
+    color: var(--color-slate-gray);
+  }
+
+  /* Metric without a card: label above, large tabular number below, hairline
+   * rule on top. Keeps dense screens from turning into card soup. */
+  .stat {
+    border-top: 2px solid var(--color-ink-charcoal);
+    padding-top: 10px;
+  }
+  .stat-value {
+    font-size: var(--text-heading);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+  .stat-label {
+    font-size: var(--text-caption);
+    color: var(--color-slate-gray);
+  }
+
+  /* Status chip: translucent tint + readable label. Never colour alone. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    font-size: var(--text-caption);
+    font-weight: 550;
+    white-space: nowrap;
+    background: color-mix(in oklab, var(--color-ink-charcoal) 8%, transparent);
+    color: var(--color-slate-gray);
+  }
+  .chip-success {
+    background: color-mix(in oklab, var(--color-forest) 14%, transparent);
+    color: var(--color-forest);
+  }
+  .chip-warn {
+    background: color-mix(in oklab, var(--color-warn) 16%, transparent);
+    color: var(--color-warn);
+  }
+  .chip-danger {
+    background: color-mix(in oklab, var(--color-danger) 14%, transparent);
+    color: var(--color-danger);
+  }
+  .chip-accent {
+    background: color-mix(in oklab, var(--color-electric-cobalt) 14%, transparent);
+    color: var(--color-electric-cobalt);
+  }
+
+  /* Small-caps section label. Rationed: at most one per three sections.
+   * Tracking is DESIGN.md's 0.077em for tracked elements. */
+  .label {
+    font-size: var(--text-caption);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-slate-gray);
+  }
+
+  /* The single authored gradient moment, used once on the brand hero. Token
+   * driven so it resolves on both surfaces instead of hard-coding light blues.
+   * Kept inside the section so the section's overflow clip does not eat it. */
+  .hero-glow {
+    position: absolute;
+    inset: 0 0 auto -12%;
+    height: 520px;
+    pointer-events: none;
+    background: radial-gradient(
+      52% 58% at 34% 34%,
+      color-mix(in oklab, var(--color-electric-cobalt) 30%, transparent),
+      transparent 72%
+    );
+  }
+
+  /* Product preview frame. */
   .device {
     overflow: hidden;
-    border-radius: var(--radius-3xl);
+    border-radius: var(--radius-2xl);
     border: 1px solid var(--color-hairline);
-    background: var(--color-pure-white);
-    box-shadow: var(--shadow-lg);
+    background: var(--color-panel);
   }
   .device-bar {
     display: flex;
     align-items: center;
     gap: 8px;
     border-bottom: 1px solid var(--color-hairline);
-    padding: 12px 16px;
+    padding: 10px 14px;
   }
   .device-dot {
-    height: 8px;
-    width: 8px;
+    height: 7px;
+    width: 7px;
     border-radius: 9999px;
     background: var(--color-faint-gray);
   }
   .device-body {
-    padding: 16px;
+    padding: 14px;
+  }
+
+  /* ── Pastel washes ────────────────────────────────────────────────────────
+   * The reference's signature: a wide, soft multi-hue gradient sitting behind a
+   * product shot. Section backdrops only, always behind an opaque surface that
+   * carries the text, so contrast never depends on the wash. */
+  .wash {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    /* Fade top and bottom so the wash reads as light behind the product shot
+     * rather than as a full-bleed coloured block. */
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 26%,
+      #000 68%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 26%, #000 68%, transparent 100%);
+  }
+  .wash-violet {
+    background:
+      radial-gradient(58% 66% at 8% 42%, color-mix(in oklab, var(--color-vivid-violet) 42%, transparent), transparent 70%),
+      radial-gradient(52% 60% at 32% 16%, color-mix(in oklab, var(--color-electric-cobalt) 40%, transparent), transparent 72%),
+      radial-gradient(56% 64% at 64% 26%, color-mix(in oklab, var(--color-cerulean) 34%, transparent), transparent 74%),
+      radial-gradient(64% 74% at 94% 46%, color-mix(in oklab, var(--color-tint-mint) 80%, transparent), transparent 76%);
+  }
+  .wash-mint {
+    background:
+      radial-gradient(60% 70% at 16% 24%, color-mix(in oklab, var(--color-tint-mint) 92%, transparent), transparent 72%),
+      radial-gradient(56% 66% at 62% 18%, color-mix(in oklab, var(--color-tint-sky) 88%, transparent), transparent 74%),
+      radial-gradient(66% 76% at 96% 44%, color-mix(in oklab, var(--color-tint-lemon) 82%, transparent), transparent 76%);
+  }
+  .wash-peach {
+    background:
+      radial-gradient(58% 68% at 14% 28%, color-mix(in oklab, var(--color-tint-peach) 92%, transparent), transparent 72%),
+      radial-gradient(54% 64% at 58% 16%, color-mix(in oklab, var(--color-tint-lilac) 85%, transparent), transparent 74%),
+      radial-gradient(64% 74% at 94% 40%, color-mix(in oklab, var(--color-tint-sky) 85%, transparent), transparent 76%);
+  }
+
+  /* ── Scroll reveal ────────────────────────────────────────────────────────
+   * One orchestrated entrance per section, staged by --i. `.is-in` is added by
+   * the IntersectionObserver in static/js/app.js. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity var(--dur-slow) var(--ease-out-quart),
+      transform var(--dur-slow) var(--ease-out-quart);
+    transition-delay: calc(var(--i, 0) * 80ms);
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Soft lift for interactive cards. */
+  .lift {
+    transition:
+      transform var(--dur) var(--ease-out-quart),
+      box-shadow var(--dur) var(--ease-out-quart),
+      border-color var(--dur) var(--ease-out-quart);
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-powder-blue);
+  }
+
+  /* Fragments swapped in by HTMX ease in instead of snapping. */
+  .swap-in {
+    animation: swap-in 220ms var(--ease-out-quart) both;
+  }
+  @keyframes swap-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .lift,
+    .swap-in {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      animation: none;
+    }
   }
 }
 
-/* Rendered Markdown for blog/news articles. */
+/* Rendered Markdown for blog and news articles. */
 @layer components {
   .prose-portatap > :first-child {
     margin-top: 0;
@@ -209,24 +583,25 @@
     margin-top: 16px;
   }
   .prose-portatap h2 {
-    margin-top: 40px;
+    margin-top: 44px;
     font-size: var(--text-heading);
     font-weight: 600;
-    line-height: 1.33;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
   }
   .prose-portatap h3 {
     margin-top: 32px;
     font-size: var(--text-heading-sm);
     font-weight: 600;
-    line-height: 1.38;
+    line-height: 1.35;
   }
   .prose-portatap ul {
     list-style: disc;
-    padding-left: 24px;
+    padding-left: 22px;
   }
   .prose-portatap ol {
     list-style: decimal;
-    padding-left: 24px;
+    padding-left: 22px;
   }
   .prose-portatap li {
     margin-top: 4px;
@@ -234,6 +609,7 @@
   .prose-portatap a {
     color: var(--color-electric-cobalt);
     text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .prose-portatap strong {
     font-weight: 600;
@@ -245,14 +621,64 @@
   }
   .prose-portatap code {
     background: var(--color-lavender-mist);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     padding: 2px 6px;
     font-size: 14px;
   }
   .prose-portatap img {
-    border-radius: 16px;
+    border-radius: var(--radius-2xl);
   }
   .prose-portatap hr {
     border-color: var(--color-hairline);
+  }
+}
+
+/* Platform console: shared navigation and readable operational tables. */
+@layer components {
+  .admin-tab {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-bottom: 2px solid transparent;
+    color: var(--color-slate-gray);
+    font-size: var(--text-body-sm);
+    font-weight: 550;
+    white-space: nowrap;
+  }
+  .admin-tab:hover {
+    color: var(--color-ink-charcoal);
+    background: var(--color-surface-ivory);
+  }
+  .admin-tab[aria-current="page"] {
+    border-bottom-color: var(--color-electric-cobalt);
+    color: var(--color-deep-cobalt);
+  }
+  .admin-table {
+    width: 100%;
+    text-align: left;
+    font-size: var(--text-body-sm);
+  }
+  .admin-table th {
+    padding: 12px 20px;
+    background: var(--color-surface-ivory);
+    color: var(--color-slate-gray);
+    font-size: var(--text-caption);
+    font-weight: 550;
+    white-space: nowrap;
+  }
+  .admin-table td {
+    padding: 20px;
+    overflow-wrap: anywhere;
+  }
+  .admin-table tr {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .admin-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .admin-table tbody tr:hover {
+    background: var(--color-surface-ivory);
   }
 }

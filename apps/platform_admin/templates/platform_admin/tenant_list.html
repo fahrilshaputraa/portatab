@@ -3,62 +3,79 @@
 {% block title %}Tenant — Admin Platform{% endblock %}
 
 {% block content %}
-<div class="flex flex-wrap items-center justify-between gap-16">
+<div class="flex flex-wrap items-start justify-between gap-16">
   <div>
-    <h1 class="text-heading-lg font-semibold text-ink-charcoal">Tenant</h1>
-    <p class="mt-4 text-body text-slate-gray">Daftar bisnis yang terdaftar di platform.</p>
+    <h1 class="text-heading font-semibold sm:text-heading-lg">Tenant</h1>
+    <p class="mt-8 text-body-sm text-slate-gray">Daftar bisnis yang terdaftar di platform.</p>
   </div>
-  <form method="get" class="flex items-end gap-12 text-body-sm">
-    <input type="search" name="q" value="{{ query }}" placeholder="Cari nama atau slug"
-           class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
-    <button type="submit" class="btn btn-ghost">Cari</button>
-  </form>
+  <a href="{% url 'platform_console:health' %}" class="btn btn-ghost">Lihat system health</a>
 </div>
 
-<div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
-  <table class="w-full text-left text-body-sm">
-    <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
-      <tr>
-        <th class="px-16 py-12 font-medium">Bisnis</th>
-        <th class="px-16 py-12 font-medium">Paket</th>
-        <th class="px-16 py-12 font-medium">Cabang</th>
-        <th class="px-16 py-12 font-medium">Produk</th>
-        <th class="px-16 py-12 font-medium">Order</th>
-        <th class="px-16 py-12 font-medium">Status</th>
-        <th class="px-16 py-12 font-medium text-right">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for tenant, subscription in rows %}
-        <tr class="border-b border-hairline last:border-0">
-          <td class="px-16 py-12">
-            <a href="{% url 'platform_console:tenant_detail' tenant.pk %}" class="font-medium text-ink-charcoal hover:text-electric-cobalt">{{ tenant.name }}</a>
-            <p class="text-caption text-steel-gray">{{ tenant.slug }}</p>
-          </td>
-          <td class="px-16 py-12 text-slate-gray">
-            {% if subscription %}
-              {{ subscription.plan.name }}
-              <span class="text-caption">({{ subscription.get_status_display }})</span>
-            {% else %}
-              —
-            {% endif %}
-          </td>
-          <td class="px-16 py-12 text-slate-gray">{{ tenant.branch_count }}</td>
-          <td class="px-16 py-12 text-slate-gray">{{ tenant.product_count }}</td>
-          <td class="px-16 py-12 text-slate-gray">{{ tenant.order_count }}</td>
-          <td class="px-16 py-12">{{ tenant.get_status_display }}</td>
-          <td class="px-16 py-12 text-right">
-            <a href="{% url 'platform_console:tenant_detail' tenant.pk %}" class="text-electric-cobalt hover:underline">Detail</a>
-          </td>
+<section class="panel mt-24 overflow-hidden" aria-labelledby="tenant-list-title">
+  <div class="flex flex-col gap-16 border-b border-hairline p-16 sm:p-24 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <h2 id="tenant-list-title" class="text-subheading font-semibold">Daftar tenant</h2>
+      <p class="mt-4 text-caption text-slate-gray">{{ rows|length }} bisnis{% if query %} ditemukan untuk “{{ query }}”{% endif %}</p>
+    </div>
+    <form method="get" role="search" class="flex w-full flex-col gap-8 text-body-sm lg:max-w-[440px]">
+      <label for="tenant-search" class="text-caption font-medium text-slate-gray">Cari tenant</label>
+      <div class="flex gap-8">
+        <input id="tenant-search" type="search" name="q" value="{{ query }}" placeholder="Nama bisnis atau slug"
+               class="min-w-0 flex-1 rounded-lg border border-faint-gray bg-panel px-12 py-10">
+        <button type="submit" class="btn btn-primary shrink-0">Cari</button>
+        {% if query %}<a href="{% url 'platform_console:tenant_list' %}" class="btn btn-ghost shrink-0">Reset</a>{% endif %}
+      </div>
+    </form>
+  </div>
+  {% if rows %}<p class="border-b border-hairline px-16 py-8 text-caption text-slate-gray sm:hidden">Geser tabel untuk melihat status dan detail tenant.</p>{% endif %}
+  {% if rows %}
+  <div class="overflow-x-auto" role="region" aria-label="Daftar tenant, geser untuk melihat semua kolom" tabindex="0">
+    <table class="admin-table {% if rows %}min-w-[880px]{% endif %}">
+      <thead>
+        <tr>
+          <th scope="col" class="w-[30%]">Bisnis</th>
+          <th scope="col">Langganan</th>
+          <th scope="col" class="text-right">Cabang</th>
+          <th scope="col" class="text-right">Produk</th>
+          <th scope="col" class="text-right">Order</th>
+          <th scope="col">Status tenant</th>
+          <th scope="col" class="text-right"><span class="sr-only">Aksi</span></th>
         </tr>
-      {% empty %}
-        <tr><td colspan="7" class="px-16 py-48 text-center text-slate-gray">Tidak ada tenant.</td></tr>
+      </thead>
+      <tbody>
+        {% for tenant, subscription in rows %}
+          <tr>
+            <td>
+              <a href="{% url 'platform_console:tenant_detail' tenant.pk %}" class="font-semibold text-ink-charcoal hover:text-electric-cobalt">{{ tenant.name }}</a>
+              <p class="mt-4 text-caption text-slate-gray">{{ tenant.slug }}</p>
+            </td>
+            <td>
+              {% if subscription %}
+                <p class="font-medium text-ink-charcoal">{{ subscription.plan.name }}</p>
+                <p class="mt-4 text-caption text-slate-gray">{{ subscription.get_status_display }}</p>
+              {% else %}<span class="text-slate-gray">Tanpa langganan</span>{% endif %}
+            </td>
+            <td class="text-right">{{ tenant.branch_count }}</td>
+            <td class="text-right">{{ tenant.product_count }}</td>
+            <td class="text-right">{{ tenant.order_count }}</td>
+            <td>{% include "platform_admin/_tenant_status.html" %}</td>
+            <td class="text-right">
+              <a href="{% url 'platform_console:tenant_detail' tenant.pk %}" class="btn btn-ghost btn-sm whitespace-nowrap" aria-label="Lihat detail {{ tenant.name }}">Detail</a>
+            </td>
+          </tr>
       {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-<p class="mt-8 text-caption text-steel-gray">
-  Akses admin ke data tenant dibatasi untuk kebutuhan support dan setiap tindakan dicatat di audit log.
-</p>
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="p-16 sm:p-24">
+      {% if query %}
+        {% include "components/_empty_state.html" with title="Tenant tidak ditemukan" message="Coba nama bisnis atau slug lain, atau reset pencarian." %}
+      {% else %}
+        {% include "components/_empty_state.html" with title="Belum ada tenant" message="Bisnis yang terdaftar akan ditampilkan di sini." %}
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+<p class="mt-16 max-w-[760px] text-caption text-slate-gray">Akses admin ke data tenant dibatasi untuk kebutuhan support dan setiap tindakan dicatat di audit log.</p>
 {% endblock %}

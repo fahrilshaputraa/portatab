@@ -14,7 +14,7 @@
 
   <section class="mt-24">
     <h2 class="text-heading-sm font-semibold text-ink-charcoal">Anggota</h2>
-    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-panel">
       <table class="w-full text-left text-body-sm">
         <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
           <tr>
@@ -55,7 +55,7 @@
 
   <section class="mt-32">
     <h2 class="text-heading-sm font-semibold text-ink-charcoal">Undangan menunggu</h2>
-    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+    <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-panel">
       <table class="w-full text-left text-body-sm">
         <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
           <tr>
@@ -74,7 +74,7 @@
               <td class="px-16 py-12 text-right">
                 <form method="post" action="{% url 'team:invitation_cancel' invitation.pk %}">
                   {% csrf_token %}
-                  <button class="text-slate-gray hover:text-red-600">Batalkan</button>
+                  <button class="text-slate-gray hover:text-danger">Batalkan</button>
                 </form>
               </td>
             </tr>

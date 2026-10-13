@@ -11,7 +11,7 @@
 
   <div class="mt-24">
     {% if products %}
-      <div class="overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+      <div class="overflow-hidden rounded-2xl border border-hairline bg-panel">
         <table class="w-full text-left text-body-sm">
           <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
             <tr>
@@ -29,7 +29,7 @@
                 <td class="px-24 py-12 font-medium text-ink-charcoal">{{ product.product.name }}</td>
                 <td class="px-24 py-12 text-slate-gray">{{ product.on_hand }}</td>
                 <td class="px-24 py-12 text-slate-gray">{{ product.reserved }}</td>
-                <td class="px-24 py-12 {% if product.track_stock and product.available <= low_stock_threshold %}text-red-600 font-medium{% else %}text-slate-gray{% endif %}">{{ product.available }}</td>
+                <td class="px-24 py-12 {% if product.track_stock and product.available <= low_stock_threshold %}text-danger font-medium{% else %}text-slate-gray{% endif %}">{{ product.available }}</td>
                 <td class="px-24 py-12 text-slate-gray">{% if product.track_stock %}Ya{% else %}Tidak{% endif %}</td>
                 <td class="px-24 py-12 text-right">
                   <a href="{% url 'inventory:adjust' product.pk %}" class="text-electric-cobalt hover:underline">Koreksi stok</a>

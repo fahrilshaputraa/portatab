@@ -8,6 +8,7 @@ from django.db import transaction
 
 from apps.catalog.models import BranchProduct, Category, Product
 from apps.platform_admin.services import grant_platform_admin
+from apps.subscriptions.services import start_trial
 from apps.tables.models import Table
 from apps.tenants.models import Tenant
 from apps.tenants.services import register_business
@@ -98,6 +99,9 @@ class Command(BaseCommand):
             )
         else:
             branch = tenant.branches.first()
+            # Re-running the seed on a tenant created before subscriptions existed
+            # must leave the demo usable, not stuck without a plan.
+            start_trial(tenant=tenant)
 
         self._seed_menu(tenant, branch)
         self._seed_tables(branch)

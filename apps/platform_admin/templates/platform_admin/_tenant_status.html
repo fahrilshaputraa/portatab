@@ -1,0 +1,7 @@
+{% if tenant.status == 'ACTIVE' %}
+  {% include "components/_badge.html" with label=tenant.get_status_display tone="success" %}
+{% elif tenant.status == 'SUSPENDED' %}
+  {% include "components/_badge.html" with label=tenant.get_status_display tone="danger" %}
+{% else %}
+  {% include "components/_badge.html" with label=tenant.get_status_display tone="neutral" %}
+{% endif %}

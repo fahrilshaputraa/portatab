@@ -1,39 +1,56 @@
 {% load ui %}
-<div id="kitchen-{{ order.id }}" class="rounded-2xl border border-hairline bg-surface-ivory p-16">
-  <div class="flex items-start justify-between gap-8">
+{% comment %}
+A kitchen docket. Read from metres away, so type and targets are large and the
+state is carried by a rule, a chip and the label. Never colour alone.
+{% endcomment %}
+<article id="kitchen-{{ order.id }}"
+         class="ticket flex min-h-[220px] flex-col"
+         data-state="{% if order.order_status == 'CONFIRMED' %}pending{% elif order.order_status == 'PREPARING' %}active{% else %}ready{% endif %}">
+  <div class="ticket-meta">
+    <span class="font-semibold tracking-wide text-ink-charcoal">{{ order.order_number }}</span>
+    <span class="flex items-center gap-12">
+      {% if order.table %}<span>Meja {{ order.table.table_number }}</span>{% endif %}
+      <time datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|date:"H:i" }}</time>
+    </span>
+  </div>
+
+  <div class="flex flex-1 flex-col justify-between gap-16 p-16">
     <div>
-      <p class="text-heading-sm font-semibold text-ink-charcoal">{{ order.order_number }}</p>
-      <p class="text-caption text-slate-gray">
-        {% if order.table %}Meja {{ order.table.table_number }} · {% endif %}{{ order.created_at|date:"H:i" }}
-      </p>
+      {% include "components/_badge.html" with label=order.get_order_status_display tone=order.order_status|order_tone %}
+      <ul class="mt-12 flex flex-col gap-6">
+        {% for item in order.items.all %}
+          <li class="flex flex-wrap items-baseline gap-8 text-subheading text-ink-charcoal">
+            <span class="font-bold tabular-nums">{{ item.quantity }}x</span>
+            <span class="font-medium">{{ item.product_name_snapshot }}</span>
+            {% if item.variant_name_snapshot %}
+              <span class="text-body-sm text-slate-gray">{{ item.variant_name_snapshot }}</span>
+            {% endif %}
+          </li>
+          {% if item.notes %}
+            <li class="text-body-sm text-warn">{{ item.notes }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if order.customer_note %}
+        <p class="mt-12 rounded-lg bg-lavender-mist px-12 py-8 text-body-sm text-ink-charcoal">
+          {{ order.customer_note }}
+        </p>
+      {% endif %}
     </div>
-    {% include "components/_badge.html" with label=order.get_order_status_display tone=order.order_status|order_tone %}
+
+    <div>
+      {% if order.order_status == 'CONFIRMED' %}
+        <button hx-post="{% url 'orders:prepare' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
+                class="btn btn-primary btn-lg btn-block">Mulai proses</button>
+      {% elif order.order_status == 'PREPARING' %}
+        <button hx-post="{% url 'orders:ready' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
+                class="btn btn-primary btn-lg btn-block">Tandai siap</button>
+      {% else %}
+        <p class="text-body-sm text-slate-gray">Menunggu diambil kasir</p>
+      {% endif %}
+      {% if row_error %}
+        <p class="mt-8 rounded-lg bg-danger/10 px-12 py-8 text-body-sm text-danger">{{ row_error }}</p>
+      {% endif %}
+    </div>
   </div>
-
-  <ul class="mt-8 flex flex-col gap-4 text-body-sm text-ink-charcoal">
-    {% for item in order.items.all %}
-      <li><span class="font-medium">{{ item.quantity }}×</span> {{ item.product_name_snapshot }}{% if item.variant_name_snapshot %} ({{ item.variant_name_snapshot }}){% endif %}
-        {% if item.notes %}<span class="text-caption text-slate-gray"> — {{ item.notes }}</span>{% endif %}</li>
-    {% endfor %}
-  </ul>
-
-  {% if order.customer_note %}
-    <p class="mt-8 rounded-lg bg-lavender-mist px-12 py-8 text-caption text-ink-charcoal">{{ order.customer_note }}</p>
-  {% endif %}
-
-  <div class="mt-12 flex gap-8">
-    {% if order.order_status == 'CONFIRMED' %}
-      <button hx-post="{% url 'orders:prepare' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
-              class="btn btn-primary btn-sm">Mulai proses</button>
-    {% elif order.order_status == 'PREPARING' %}
-      <button hx-post="{% url 'orders:ready' order.pk %}" hx-target="#kitchen-{{ order.id }}" hx-swap="outerHTML"
-              class="btn btn-primary btn-sm">Tandai siap</button>
-    {% else %}
-      <span class="text-caption text-slate-gray">Menunggu diambil kasir</span>
-    {% endif %}
-  </div>
-
-  {% if row_error %}
-    <p class="mt-8 rounded-lg bg-red-50 px-12 py-8 text-caption text-red-700">{{ row_error }}</p>
-  {% endif %}
-</div>
+</article>

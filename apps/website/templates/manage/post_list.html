@@ -15,7 +15,7 @@
 <form method="get" class="mt-24 flex flex-wrap items-end gap-12 text-body-sm">
   <label class="flex flex-col gap-4">
     Jenis
-    <select name="kind" class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
+    <select name="kind" class="rounded-2xl border border-hairline bg-panel px-16 py-8">
       <option value="">Semua</option>
       <option value="BLOG" {% if kind == 'BLOG' %}selected{% endif %}>Blog</option>
       <option value="NEWS" {% if kind == 'NEWS' %}selected{% endif %}>Berita</option>
@@ -23,7 +23,7 @@
   </label>
   <label class="flex flex-col gap-4">
     Status
-    <select name="status" class="rounded-2xl border border-hairline bg-pure-white px-16 py-8">
+    <select name="status" class="rounded-2xl border border-hairline bg-panel px-16 py-8">
       <option value="">Semua</option>
       <option value="DRAFT" {% if status == 'DRAFT' %}selected{% endif %}>Draft</option>
       <option value="PUBLISHED" {% if status == 'PUBLISHED' %}selected{% endif %}>Terbit</option>
@@ -32,7 +32,7 @@
   <button type="submit" class="btn btn-ghost">Terapkan</button>
 </form>
 
-<div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+<div class="mt-24 overflow-hidden rounded-2xl border border-hairline bg-panel">
   <table class="w-full text-left text-body-sm">
     <thead class="border-b border-hairline text-caption uppercase tracking-wide text-slate-gray">
       <tr>

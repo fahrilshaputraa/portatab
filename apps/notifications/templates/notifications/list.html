@@ -22,7 +22,7 @@
   <div class="mt-24 flex flex-col gap-12">
     {% for notification in notifications %}
       <article class="rounded-2xl border p-16
-                      {% if notification.read_at %}border-hairline bg-pure-white{% else %}border-electric-cobalt bg-surface-ivory{% endif %}">
+                      {% if notification.read_at %}border-hairline bg-panel{% else %}border-electric-cobalt bg-surface-ivory{% endif %}">
         <div class="flex flex-wrap items-start justify-between gap-8">
           <div>
             <p class="text-body-sm font-semibold text-ink-charcoal">{{ notification.title }}</p>

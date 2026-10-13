@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="pt-title">
+  <title id="pt-title">PortaTap</title>
+  <rect width="256" height="256" rx="57.6" fill="#0068F9"/>
+  <g transform="translate(19.25 16.83) scale(0.843)" fill="#ffffff" aria-hidden="true">
+    <path d="M54 226V103Q54 90 66 83L137 42Q151 34 164 41L195 59Q204 64 204 78V172Q204 184 194 190L163 208V83Q163 74 154 79L76 124Q68 130 68 141V226Z"/>
+    <circle cx="111" cy="145" r="6.5"/>
+  </g>
+</svg>

@@ -206,3 +206,36 @@ def test_public_menu_applies_the_published_theme(client, tenant, owner, branch, 
 
     assert "--menu-primary: #046645" in body
     assert TenantTheme.objects.filter(tenant=tenant).count() == 1
+
+
+# ------------------------------------------------------- degraded states ----
+
+
+@pytest.mark.django_db
+def test_editor_still_works_without_an_active_subscription(client, owner, tenant):
+    """A tenant with no subscription falls back to the entry tier.
+
+    Regression: `_plan_rank` used to return 0 for "no plan", which unlocked no
+    templates and made the editor raise a 500 instead of rendering.
+    """
+    from apps.subscriptions.models import Subscription
+
+    Subscription.objects.filter(tenant=tenant).delete()
+    client.force_login(owner)
+
+    response = client.get(reverse("themes:editor"))
+
+    assert response.status_code == 200
+    assert "Tampilan Menu" in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_editor_shows_an_error_state_when_the_catalogue_is_empty(client, owner, tenant):
+    """An empty catalogue is a state to explain, not a crash."""
+    ThemeTemplate.objects.update(status="INACTIVE")
+    client.force_login(owner)
+
+    response = client.get(reverse("themes:editor"))
+
+    assert response.status_code == 200
+    assert "belum bisa dipakai" in response.content.decode()

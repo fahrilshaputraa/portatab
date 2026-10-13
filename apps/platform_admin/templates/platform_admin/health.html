@@ -32,7 +32,7 @@
 
 <section class="mt-32">
   <h2 class="text-heading-sm font-semibold text-ink-charcoal">Perlu perhatian</h2>
-  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-panel">
     <table class="w-full text-left text-body-sm">
       <tbody>
         <tr class="border-b border-hairline">
@@ -41,23 +41,23 @@
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Order ditandai terlambat</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if orders_late %}text-red-600{% else %}text-ink-charcoal{% endif %}">{{ orders_late }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if orders_late %}text-danger{% else %}text-ink-charcoal{% endif %}">{{ orders_late }}</td>
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Pembayaran digital menggantung &gt; 30 menit</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if payments_stuck %}text-red-600{% else %}text-ink-charcoal{% endif %}">{{ payments_stuck }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if payments_stuck %}text-danger{% else %}text-ink-charcoal{% endif %}">{{ payments_stuck }}</td>
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Webhook gagal / belum diproses</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if webhooks_unprocessed %}text-red-600{% else %}text-ink-charcoal{% endif %}">{{ webhooks_unprocessed }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if webhooks_unprocessed %}text-danger{% else %}text-ink-charcoal{% endif %}">{{ webhooks_unprocessed }}</td>
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Refund perlu tindak lanjut</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if refunds_needing_followup %}text-amber-700{% else %}text-ink-charcoal{% endif %}">{{ refunds_needing_followup }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if refunds_needing_followup %}text-warn{% else %}text-ink-charcoal{% endif %}">{{ refunds_needing_followup }}</td>
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Langganan menunggak</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if subscriptions_past_due %}text-amber-700{% else %}text-ink-charcoal{% endif %}">{{ subscriptions_past_due }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if subscriptions_past_due %}text-warn{% else %}text-ink-charcoal{% endif %}">{{ subscriptions_past_due }}</td>
         </tr>
         <tr class="border-b border-hairline">
           <td class="px-16 py-12">Uji coba berakhir ≤ 3 hari</td>
@@ -65,7 +65,7 @@
         </tr>
         <tr>
           <td class="px-16 py-12">Order selesai tapi belum lunas</td>
-          <td class="px-16 py-12 text-right font-medium tabular-nums {% if unpaid_completed %}text-amber-700{% else %}text-ink-charcoal{% endif %}">{{ unpaid_completed }}</td>
+          <td class="px-16 py-12 text-right font-medium tabular-nums {% if unpaid_completed %}text-warn{% else %}text-ink-charcoal{% endif %}">{{ unpaid_completed }}</td>
         </tr>
       </tbody>
     </table>
@@ -74,7 +74,7 @@
 
 <section class="mt-32">
   <h2 class="text-heading-sm font-semibold text-ink-charcoal">Webhook terakhir</h2>
-  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-pure-white">
+  <div class="mt-12 overflow-hidden rounded-2xl border border-hairline bg-panel">
     <table class="w-full text-left text-body-sm">
       <tbody>
         {% for event in webhooks_recent %}

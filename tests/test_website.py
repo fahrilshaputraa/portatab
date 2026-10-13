@@ -35,16 +35,15 @@ def test_landing_page_renders_with_plans(client):
 
 
 @pytest.mark.django_db
-def test_landing_page_lists_latest_content(client):
+def test_landing_page_links_to_blog_and_news(client):
+    """The landing stays a conversion surface; content lives on its own pages."""
     make_post(title="Panduan harga menu", slug="panduan-harga-menu")
-    make_post(
-        kind=PostKind.NEWS, title="Kabar rilis", slug="kabar-rilis", body="Berita singkat."
-    )
 
     body = client.get(reverse("website:landing")).content.decode()
 
-    assert "Panduan harga menu" in body
-    assert "Kabar rilis" in body
+    assert reverse("website:blog_list") in body
+    assert reverse("website:news_list") in body
+    assert "Panduan harga menu" not in body
 
 
 @pytest.mark.django_db

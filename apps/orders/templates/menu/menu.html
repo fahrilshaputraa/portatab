@@ -4,7 +4,7 @@
 
 {% block header %}
   {% if theme.banner_url %}
-    <img src="{{ theme.banner_url }}" alt="" class="mb-12 h-96 w-full rounded-2xl object-cover">
+    <img src="{{ theme.banner_url }}" alt="" class="mb-12 h-[160px] w-full rounded-2xl object-cover">
   {% endif %}
   <div class="flex items-center gap-12">
     {% if theme.logo_url %}
@@ -19,7 +19,7 @@
 
 {% block content %}
   {% if not accepts_orders %}
-    <div class="mb-16 rounded-2xl border border-amber-200 bg-amber-50 px-16 py-12 text-body-sm text-amber-800">
+    <div class="mb-16 rounded-2xl border border-warn/30 bg-warn/10 px-16 py-12 text-body-sm text-warn">
       Meja ini sedang tidak menerima order baru. Silakan hubungi staf.
     </div>
   {% endif %}
@@ -30,7 +30,7 @@
       <h2 class="text-heading-sm font-semibold text-ink-charcoal">{{ group.grouper.name|default:"Lainnya" }}</h2>
       <div class="mt-12 {% if theme.layout == 'grid' %}grid grid-cols-1 gap-12 sm:grid-cols-2{% else %}flex flex-col gap-12{% endif %}">
         {% for branch_product in group.list %}
-          <div class="rounded-2xl border border-hairline bg-pure-white p-16">
+          <div class="rounded-2xl border border-hairline bg-panel p-16">
             <div class="flex items-start justify-between gap-8">
               <div>
                 <p class="text-body font-medium text-ink-charcoal">{{ branch_product.product.name }}</p>
@@ -55,8 +55,8 @@
                 </select>
               {% endif %}
               <input type="number" name="quantity" value="1" min="1"
-                     class="w-64 rounded-full border border-hairline px-12 py-8 text-body-sm">
-              <button class="btn btn-sm ml-auto text-pure-white" style="background: var(--menu-primary)">
+                     class="w-[64px] rounded-full border border-hairline px-12 py-8 text-body-sm">
+              <button class="btn btn-sm ml-auto text-on-accent" style="background: var(--menu-primary)">
                 Tambah
               </button>
             </form>
@@ -71,13 +71,13 @@
 
 {% block footer %}
   {% if cart_count %}
-    <div class="fixed inset-x-0 bottom-0 border-t border-hairline bg-pure-white">
+    <div class="fixed inset-x-0 bottom-0 border-t border-hairline bg-panel">
       <div class="mx-auto flex max-w-2xl items-center justify-between gap-16 px-16 py-16">
         <div>
           <p class="text-caption text-slate-gray">{{ cart_count }} item</p>
           <p class="text-body font-semibold text-ink-charcoal">Rp {{ cart_total }}</p>
         </div>
-        <a href="{% url 'menu:checkout' table.qr_token %}" class="btn text-pure-white" style="background: var(--menu-primary)">Checkout</a>
+        <a href="{% url 'menu:checkout' table.qr_token %}" class="btn text-on-accent" style="background: var(--menu-primary)">Checkout</a>
       </div>
     </div>
   {% endif %}
