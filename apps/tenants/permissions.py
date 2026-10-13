@@ -8,6 +8,23 @@ from functools import wraps
 
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
+from django.shortcuts import redirect
+
+from apps.platform_admin.permissions import is_platform_admin
+
+NO_TENANT_MESSAGE = "Tidak ada konteks tenant aktif untuk akun ini."
+
+
+def _no_tenant_context(request):
+    """Refuse a tenant view for a user with no active tenant context.
+
+    A platform admin is not a tenant member (docs/BUSINESS-RULES.md §2), so the
+    business portal is a dead end for them: they are sent to the platform console
+    they do own. Everyone else is denied, exactly as before.
+    """
+    if is_platform_admin(request.user):
+        return redirect("platform_console:home")
+    raise PermissionDenied(NO_TENANT_MESSAGE)
 
 
 def require_tenant(view):
@@ -16,7 +33,7 @@ def require_tenant(view):
     @wraps(view)
     def wrapper(request, *args, **kwargs):
         if getattr(request, "membership", None) is None:
-            raise PermissionDenied("Tidak ada konteks tenant aktif untuk akun ini.")
+            return _no_tenant_context(request)
         return view(request, *args, **kwargs)
 
     return wrapper
@@ -30,7 +47,7 @@ def require_permission(code: str):
         def wrapper(request, *args, **kwargs):
             membership = getattr(request, "membership", None)
             if membership is None:
-                raise PermissionDenied("Tidak ada konteks tenant aktif untuk akun ini.")
+                return _no_tenant_context(request)
             if not membership.has_permission(code):
                 raise PermissionDenied("Anda tidak memiliki izin untuk aksi ini.")
             return view(request, *args, **kwargs)

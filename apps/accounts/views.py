@@ -14,6 +14,7 @@ from apps.accounts.forms import (
     RegistrationForm,
 )
 from apps.accounts.models import Invitation, MembershipStatus, User
+from apps.platform_admin.permissions import is_platform_admin
 
 BACKEND = "apps.accounts.backends.EmailOrUsernameBackend"
 
@@ -22,6 +23,18 @@ class PortatapLoginView(LoginView):
     template_name = "accounts/login.html"
     authentication_form = EmailAuthenticationForm
     redirect_authenticated_user = True
+
+    def get_success_url(self):
+        """Send a platform admin to the console, not to a business dashboard.
+
+        docs/BUSINESS-RULES.md §2: a platform admin is never a tenant member, so
+        the business dashboard would refuse them. Their own surface is the
+        platform console.
+        """
+        user = self.request.user
+        if is_platform_admin(user) and not user.memberships.exists():
+            return reverse("platform_console:home")
+        return super().get_success_url()
 
 
 def register(request):
